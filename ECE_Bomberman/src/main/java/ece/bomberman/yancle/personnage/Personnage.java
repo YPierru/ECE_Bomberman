@@ -2,9 +2,11 @@ package ece.bomberman.yancle.personnage;
 
 import java.util.HashSet;
 
+import ece.bomberman.yancle.utilitaires.Chronometre;
+
 public class Personnage {
 	private int life;
-	private int timer;
+	private long timer;
 	private int power;
 	private int numberMaxOfBombe;
 	private HashSet<Bombe> bombSet;
@@ -19,6 +21,23 @@ public class Personnage {
 		power = 2;
 	}
 
+	public Boolean poserBombe(){
+		Boolean rtr = false;
+		if(bombSet.size()<numberMaxOfBombe){
+			bombSet.add(new Bombe(new Chronometre(System.currentTimeMillis()/1000),power,x,y));
+			rtr = true;
+		}
+		return rtr;
+	}
+	
+	public void bombExplosion(){
+		for(Bombe bombe : bombSet){
+			if(bombe.getTimer().compare(bombe.getSeuil())){
+				bombSet.remove(bombe);
+			}
+		}
+	}
+	
 	/**
 	 * @return the life
 	 */
@@ -36,14 +55,14 @@ public class Personnage {
 	/**
 	 * @return the timer
 	 */
-	public int getTimer() {
+	public long getTimer() {
 		return timer;
 	}
 
 	/**
 	 * @param timer the timer to set
 	 */
-	public void setTimer(int timer) {
+	public void setTimer(long timer) {
 		this.timer = timer;
 	}
 
