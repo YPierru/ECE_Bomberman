@@ -1,12 +1,15 @@
 package ece.bomberman.yancle.personnage;
 
+import ece.bomberman.yancle.utilitaires.Chronometre;
+
 public class Bombe {
-	private int timer;
+	private Chronometre timer;
+	private long seuil;
 	private int power;
 	private int x;
 	private int y;
 	
-	public Bombe(int tim, int pow, int x, int y){
+	public Bombe(Chronometre tim, int pow, int x, int y){
 		setTimer(tim);
 		setPower(pow);
 		setX(x);
@@ -16,15 +19,29 @@ public class Bombe {
 	/**
 	 * @return the timer
 	 */
-	public int getTimer() {
+	public Chronometre getTimer() {
 		return timer;
 	}
 
 	/**
-	 * @param timer the timer to set
+	 * @param tim the timer to set
 	 */
-	public void setTimer(int timer) {
-		this.timer = timer;
+	public void setTimer(Chronometre tim) {
+		this.timer = tim;
+	}
+
+	/**
+	 * @return the seuil
+	 */
+	public long getSeuil() {
+		return seuil;
+	}
+
+	/**
+	 * @param seuil the seuil to set
+	 */
+	public void setSeuil(long seuil) {
+		this.seuil = seuil;
 	}
 
 	/**
