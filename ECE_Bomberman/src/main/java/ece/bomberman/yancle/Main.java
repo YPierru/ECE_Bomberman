@@ -2,15 +2,15 @@ package ece.bomberman.yancle;
 
 import java.io.IOException;
 
-import com.sun.corba.se.spi.orbutil.fsm.InputImpl;
-
 import ece.bomberman.yancle.view.InputIPAndPortController;
+import ece.bomberman.yancle.view.InputPortController;
 import ece.bomberman.yancle.view.StartFrameController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
 public class Main extends Application {
@@ -25,7 +25,7 @@ public class Main extends Application {
 		stage.setTitle("Bomberman");
 		
 		initRootLayout();
-		showStartFrame();
+		displayStartFrame();
 	}
 	
 	
@@ -47,7 +47,7 @@ public class Main extends Application {
 	}
 	
 	
-	public void showStartFrame(){
+	public void displayStartFrame(){
         try {
             // Load person overview.
             FXMLLoader loader = new FXMLLoader();
@@ -79,6 +79,7 @@ public class Main extends Application {
             
             // Give the controller access to the main app.
             InputIPAndPortController controller = loader.getController();
+            controller.setMain(this);
             
         } catch (IOException e) {
             e.printStackTrace();
@@ -94,6 +95,24 @@ public class Main extends Application {
 
             // Set person overview into the center of root layout.
             rootLayout.setCenter(inputIpAndPort);
+            
+            InputPortController controller = loader.getController();
+            controller.setMain(this);
+            
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+	}
+	
+	public void displayMap(){
+        try {
+            // Load person overview.
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(Main.class.getResource("view/MapGame.fxml"));
+            GridPane map = (GridPane) loader.load();
+
+            // Set person overview into the center of root layout.
+            rootLayout.setCenter(map);
             
             
         } catch (IOException e) {

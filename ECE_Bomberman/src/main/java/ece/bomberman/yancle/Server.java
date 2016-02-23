@@ -3,7 +3,7 @@ package ece.bomberman.yancle;
 import java.io.IOException;
 import java.net.ServerSocket;
 
-public class Server {
+public class Server implements Runnable{
 	
 	
 	private int port;
@@ -12,19 +12,24 @@ public class Server {
 	
 	public Server(int p){
 		port=p;
+	}
+	
+
+
+	@Override
+	public void run() {
 		try {
-			start();
+			socket = new ServerSocket(port);
+			System.out.println("started !");
+			
+			while(true){
+				socket.accept();
+				System.out.println("new client");
+			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-	}
-	
-	
-	
-	public void start() throws IOException{
-		socket = new ServerSocket(port);
-		System.out.println("started !");
 	}
 
 }
