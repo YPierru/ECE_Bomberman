@@ -12,7 +12,7 @@ public class Bombe {
 		setX(x);
 		setY(y);
 	}
-
+	
 	/**
 	 * @return the timer
 	 */

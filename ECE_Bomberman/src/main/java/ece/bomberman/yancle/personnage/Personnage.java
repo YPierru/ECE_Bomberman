@@ -19,6 +19,14 @@ public class Personnage {
 		power = 2;
 	}
 
+	public Boolean poserBombe(){
+		Boolean rtr = false;
+		if(bombSet.size()<numberMaxOfBombe){
+			bombSet.add(new Bombe(timer,power,x,y));
+		}
+		return rtr;
+	}
+	
 	/**
 	 * @return the life
 	 */
