@@ -1,9 +1,9 @@
-package ece.bomberman.yancle.utilitaires;
+package ece.bomberman.yancle.utility;
 
-public class Chronometre {
+public class Chronometer {
 	private long Depart;
 	
-	public Chronometre(long Dep){
+	public Chronometer(long Dep){
 		setDepart(Dep);
 	}
 	
