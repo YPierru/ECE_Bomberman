@@ -21,15 +21,15 @@ public class Main extends Application {
 		
 
         try {
-        // Load root layout from fxml file.
-        FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(Main.class.getResource("view/StartFrame.fxml"));
-        rootLayout = (AnchorPane) loader.load();
-
-        // Show the scene containing the root layout.
-        Scene scene = new Scene(rootLayout);
-        stage.setScene(scene);
-        stage.show();
+	        // Load root layout from fxml file.
+	        FXMLLoader loader = new FXMLLoader();
+	        loader.setLocation(Main.class.getResource("view/StartFrame.fxml"));
+	        rootLayout = (AnchorPane) loader.load();
+	
+	        // Show the scene containing the root layout.
+	        Scene scene = new Scene(rootLayout);
+	        stage.setScene(scene);
+	        stage.show();
         
         }catch (IOException e) {
             e.printStackTrace();
