@@ -1,22 +1,22 @@
-package ece.bomberman.yancle.personnage;
+package ece.bomberman.yancle.character;
 
 import java.util.HashSet;
 
-import ece.bomberman.yancle.utilitaires.Chronometre;
+import ece.bomberman.yancle.utility.Chronometer;
 
-public class Personnage {
+public class Character {
 	private int life;
 	private long timer;
 	private int power;
 	private int numberMaxOfBombe;
-	private HashSet<Bombe> bombSet;
+	private HashSet<Bomb> bombSet;
 	private int x;
 	private int y;
 	
-	public Personnage(){
+	public Character(){
 		life = 5;
 		numberMaxOfBombe = 3;
-		bombSet = new HashSet<Bombe>();
+		bombSet = new HashSet<Bomb>();
 		timer = 4;
 		power = 2;
 	}
@@ -24,20 +24,25 @@ public class Personnage {
 	public Boolean poserBombe(){
 		Boolean rtr = false;
 		if(bombSet.size()<numberMaxOfBombe){
-			bombSet.add(new Bombe(new Chronometre(System.currentTimeMillis()/1000),power,x,y));
+			bombSet.add(new Bomb(new Chronometer(System.currentTimeMillis()/1000),power,x,y));
 			rtr = true;
 		}
 		return rtr;
 	}
 	
 	public void bombExplosion(){
-		for(Bombe bombe : bombSet){
-			if(bombe.getTimer().compare(bombe.getSeuil())){
-				bombSet.remove(bombe);
+		for(Bomb bomb : bombSet){
+			if(bomb.getTimer().compare(bomb.getSeuil())){
+				bombSet.remove(bomb);
 			}
 		}
 	}
 	
+	public void deplacement(String move){
+		if(move.equals("N")){
+			
+		}
+	}
 	/**
 	 * @return the life
 	 */
@@ -97,14 +102,14 @@ public class Personnage {
 	/**
 	 * @return the bombSet
 	 */
-	public HashSet<Bombe> getBombSet() {
+	public HashSet<Bomb> getBombSet() {
 		return bombSet;
 	}
 
 	/**
 	 * @param bombSet the bombSet to set
 	 */
-	public void setBombSet(HashSet<Bombe> bombSet) {
+	public void setBombSet(HashSet<Bomb> bombSet) {
 		this.bombSet = bombSet;
 	}
 
