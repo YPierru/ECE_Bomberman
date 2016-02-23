@@ -21,6 +21,7 @@ public class Main extends Application {
 		
 
         try {
+        	System.out.println();
 	        // Load root layout from fxml file.
 	        FXMLLoader loader = new FXMLLoader();
 	        loader.setLocation(Main.class.getResource("view/StartFrame.fxml"));
