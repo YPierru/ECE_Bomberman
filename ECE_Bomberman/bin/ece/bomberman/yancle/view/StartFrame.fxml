@@ -8,7 +8,7 @@
 <AnchorPane prefHeight="300.0" prefWidth="300.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ece.bomberman.yancle.view.StartFrameController">
    <children>
       <Label layoutX="109.0" layoutY="14.0" text="Bomberman !" AnchorPane.topAnchor="14.0" />
-      <Button fx:id="joinServerButton" layoutX="107.0" layoutY="98.0" mnemonicParsing="false" text="Join server" />
-      <Button fx:id="startServerButton" layoutX="105.0" layoutY="163.0" mnemonicParsing="false" text="Start server" />
+      <Button fx:id="joinServerButton" layoutX="107.0" layoutY="98.0" mnemonicParsing="false" onAction="#actionJoinServer" text="Join server" />
+      <Button fx:id="startServerButton" layoutX="105.0" layoutY="163.0" mnemonicParsing="false" onAction="#actionStartServer" text="Start server" />
    </children>
 </AnchorPane>

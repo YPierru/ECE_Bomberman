@@ -2,30 +2,39 @@ package ece.bomberman.yancle;
 
 import java.io.IOException;
 
+import com.sun.corba.se.spi.orbutil.fsm.InputImpl;
+
+import ece.bomberman.yancle.view.InputIPAndPortController;
+import ece.bomberman.yancle.view.StartFrameController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
 public class Main extends Application {
 
 	private Stage stage;
-    private AnchorPane rootLayout;
+    private BorderPane rootLayout;
 	
 	@Override
 	public void start(Stage primaryStage) {
 		stage = primaryStage;
-		stage.setResizable(false);
+		//stage.setResizable(false);
 		stage.setTitle("Bomberman");
 		
-
+		initRootLayout();
+		showStartFrame();
+	}
+	
+	
+	public void initRootLayout(){
         try {
-        	System.out.println("dede");
 	        // Load root layout from fxml file.
 	        FXMLLoader loader = new FXMLLoader();
-	        loader.setLocation(Main.class.getResource("view/StartFrame.fxml"));
-	        rootLayout = (AnchorPane) loader.load();
+	        loader.setLocation(Main.class.getResource("view/RootLayout.fxml"));
+	        rootLayout = (BorderPane) loader.load();
 	
 	        // Show the scene containing the root layout.
 	        Scene scene = new Scene(rootLayout);
@@ -33,6 +42,61 @@ public class Main extends Application {
 	        stage.show();
         
         }catch (IOException e) {
+            e.printStackTrace();
+        }
+	}
+	
+	
+	public void showStartFrame(){
+        try {
+            // Load person overview.
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(Main.class.getResource("view/StartFrame.fxml"));
+            AnchorPane startFrame = (AnchorPane) loader.load();
+
+            // Set person overview into the center of root layout.
+            rootLayout.setCenter(startFrame);
+            
+            // Give the controller access to the main app.
+            StartFrameController controller = loader.getController();
+            controller.setMain(this);
+            
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+	}
+	
+	
+	public void displayInputIpAndPort(){
+        try {
+            // Load person overview.
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(Main.class.getResource("view/InputIPAndPort.fxml"));
+            AnchorPane inputIpAndPort = (AnchorPane) loader.load();
+
+            // Set person overview into the center of root layout.
+            rootLayout.setCenter(inputIpAndPort);
+            
+            // Give the controller access to the main app.
+            InputIPAndPortController controller = loader.getController();
+            
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+	}
+	
+	public void displayInputPort(){
+        try {
+            // Load person overview.
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(Main.class.getResource("view/InputPort.fxml"));
+            AnchorPane inputIpAndPort = (AnchorPane) loader.load();
+
+            // Set person overview into the center of root layout.
+            rootLayout.setCenter(inputIpAndPort);
+            
+            
+        } catch (IOException e) {
             e.printStackTrace();
         }
 	}

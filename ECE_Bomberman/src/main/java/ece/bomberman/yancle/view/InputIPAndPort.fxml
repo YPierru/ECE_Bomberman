@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane prefHeight="181.0" prefWidth="328.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ece.bomberman.yancle.view.InputIPAndPortController">
+   <children>
+      <Label layoutX="62.0" layoutY="49.0" text="IP : " AnchorPane.leftAnchor="62.0" />
+      <Label layoutX="62.0" layoutY="100.0" text="Port : " AnchorPane.leftAnchor="62.0" />
+      <Label layoutX="74.0" layoutY="6.0" text="Write and IP adress and a port" />
+      <TextField fx:id="ip" layoutX="99.0" layoutY="44.0" />
+      <TextField fx:id="port" layoutX="99.0" layoutY="95.0" />
+      <Button fx:id="join" layoutX="145.0" layoutY="140.0" mnemonicParsing="false" onAction="#handleClick" text="Join" />
+   </children>
+</AnchorPane>
