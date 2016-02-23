@@ -23,6 +23,7 @@ public class Personnage {
 		Boolean rtr = false;
 		if(bombSet.size()<numberMaxOfBombe){
 			bombSet.add(new Bombe(timer,power,x,y));
+			rtr = true;
 		}
 		return rtr;
 	}
