@@ -40,7 +40,16 @@ public class Character {
 	
 	public void deplacement(String move){
 		if(move.equals("N")){
-			
+			setY(getY()-1);
+		}
+		else if(move.equals("S")){
+			setY(getY()+1);
+		}
+		else if(move.equals("E")){
+			setX(getX()+1);
+		}
+		else if(move.equals("W")){
+			setX(getX()-1);
 		}
 	}
 	/**
