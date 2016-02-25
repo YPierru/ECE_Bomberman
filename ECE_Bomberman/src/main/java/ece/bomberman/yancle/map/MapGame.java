@@ -12,6 +12,12 @@ import ece.bomberman.yancle.map.tiles.UndestructibleWall;
 import javafx.scene.Node;
 import javafx.scene.layout.AnchorPane;
 
+/**
+ * Represent the board game.
+ * Extends an AnchorPane
+ * @author YPierru
+ *
+ */
 public class MapGame extends AnchorPane {
 	
 
@@ -20,6 +26,9 @@ public class MapGame extends AnchorPane {
 		initMap();
 	}
 	
+	/**
+	 * Draw the map
+	 */
 	public void initMap(){
 		getChildren().clear();
 		int x=0,y=0;

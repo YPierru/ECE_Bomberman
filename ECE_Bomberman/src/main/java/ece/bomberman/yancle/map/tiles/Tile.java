@@ -4,6 +4,13 @@ import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.shape.Rectangle;
 
+
+/**
+ * Abstract class for the Tile.
+ * Extend Rectangle
+ * @author YPierru
+ *
+ */
 public abstract class Tile extends Rectangle {
 	
 	public Tile(int x,int y,int w, int h){

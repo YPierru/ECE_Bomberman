@@ -3,6 +3,11 @@ package ece.bomberman.yancle.map.tiles;
 import ece.bomberman.yancle.Constants;
 import javafx.scene.paint.Color;
 
+/**
+ * Represent an undestructible wall.
+ * @author YPierru
+ *
+ */
 public class UndestructibleWall extends Tile {
 
 	public UndestructibleWall(int x, int y) {

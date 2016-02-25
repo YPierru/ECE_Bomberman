@@ -5,6 +5,12 @@ import ece.bomberman.yancle.character.Bomb;
 import ece.bomberman.yancle.character.Character;
 import javafx.scene.layout.Pane;
 
+/**
+ * Represents a tile container
+ * A tile container contain a tile, and can contain a bomb/character
+ * @author YPierru
+ *
+ */
 public class TileContainer extends Pane {
 
 	private Tile tile;
