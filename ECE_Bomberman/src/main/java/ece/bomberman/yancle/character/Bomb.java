@@ -1,19 +1,34 @@
 package ece.bomberman.yancle.character;
 
 import ece.bomberman.yancle.utility.Chronometer;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 
-public class Bomb {
+public class Bomb extends Circle{
 	private Chronometer timer;
 	private long seuil;
 	private int power;
-	private int x;
-	private int y;
+	private double x;
+	private double y;
 	
-	public Bomb(Chronometer tim, int pow, int x, int y){
+	
+	public Bomb(){
+		super();
+		initialize();
+	}
+	
+	public Bomb(Chronometer tim, int pow, double x, double y){
+		super();
+		initialize();
 		setTimer(tim);
 		setPower(pow);
 		setX(x);
 		setY(y);
+	}
+	
+	public void initialize(){
+		setRadius(10);
+		setFill(Color.RED);
 	}
 	
 	/**
@@ -61,29 +76,31 @@ public class Bomb {
 	/**
 	 * @return the x
 	 */
-	public int getX() {
+	public double getX() {
 		return x;
 	}
 
 	/**
 	 * @param x the x to set
 	 */
-	public void setX(int x) {
+	public void setX(double x) {
 		this.x = x;
+		setCenterX(x);
 	}
 
 	/**
 	 * @return the y
 	 */
-	public int getY() {
+	public double getY() {
 		return y;
 	}
 
 	/**
 	 * @param y the y to set
 	 */
-	public void setY(int y) {
+	public void setY(double y) {
 		this.y = y;
+		setCenterY(y);
 	}
 
 }

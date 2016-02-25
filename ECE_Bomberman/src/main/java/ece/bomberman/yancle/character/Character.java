@@ -3,22 +3,37 @@ package ece.bomberman.yancle.character;
 import java.util.HashSet;
 
 import ece.bomberman.yancle.utility.Chronometer;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Arc;
+import javafx.scene.shape.ArcType;
 
-public class Character {
+public class Character extends Arc{
 	private int life;
 	private long timer;
 	private int power;
 	private int numberMaxOfBombe;
 	private HashSet<Bomb> bombSet;
-	private int x;
-	private int y;
+	private double x;
+	private double y;
+	
 	
 	public Character(){
+		super();
 		life = 5;
 		numberMaxOfBombe = 3;
 		bombSet = new HashSet<Bomb>();
 		timer = 4;
 		power = 2;
+		initialize();
+	}
+	
+	public void initialize(){
+        setRadiusX(12.0f);
+        setRadiusY(12.0f);
+        setStartAngle(45.0f);
+        setLength(270.0f);
+        setFill(Color.BLUE);
+        setType(ArcType.ROUND);
 	}
 
 	public Boolean poserBombe(){
@@ -116,29 +131,31 @@ public class Character {
 	/**
 	 * @return the x
 	 */
-	public int getX() {
+	public double getX() {
 		return x;
 	}
 
 	/**
 	 * @param x the x to set
 	 */
-	public void setX(int x) {
+	public void setX(double x) {
 		this.x = x;
+		setCenterX(x);
 	}
 
 	/**
 	 * @return the y
 	 */
-	public int getY() {
+	public double getY() {
 		return y;
 	}
 
 	/**
 	 * @param y the y to set
 	 */
-	public void setY(int y) {
+	public void setY(double y) {
 		this.y = y;
+		setCenterY(y);
 	}
 
 }
