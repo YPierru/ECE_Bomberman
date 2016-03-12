@@ -1,40 +1,85 @@
 package ece.bomberman.yancle.map.tiles;
 
-import ece.bomberman.yancle.Constants;
-import ece.bomberman.yancle.character.Bomb;
-import ece.bomberman.yancle.character.Character;
+import java.io.Serializable;
+
+import javafx.collections.ObservableList;
+import javafx.scene.Node;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
+import javafx.scene.shape.Arc;
 
 /**
  * Represents a tile container
- * A tile container contain a tile, and can contain a bomb/character
+ * A tile container contain a tile, and can contain a bomb/characterw
  * @author YPierru
  *
  */
-public class TileContainer extends Pane {
+public class TileContainer extends Pane implements Serializable{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private Tile tile;
+	private int x;
+	private int y;
+	private int centerX;
+	private int centerY;
+	
+	public static final int SIZE_TILE=50;
 	
 	
-	public TileContainer(Tile t) {
+	public TileContainer(Tile t,int x, int y) {
 		super(t);
 		tile=t;
+		this.x=x;
+		this.y=y;
+		centerX=x+SIZE_TILE/2;
+		centerY=y+SIZE_TILE/2;
+		moveTile();
 	}
 	
-	public void addCharacter(Character c){
-		c.setX(tile.getX()+Constants.SIZE_TILE/2);
-		c.setY(tile.getY()+Constants.SIZE_TILE/2);
-		getChildren().add(c);
-	}
-	
-	public void addBomb(Bomb b){
-		b.setX(tile.getX()+Constants.SIZE_TILE/2);
-		b.setY(tile.getY()+Constants.SIZE_TILE/2);
-		getChildren().add(b);
+	public void moveTile(){
+		tile.setX(x);
+		tile.setY(y);
 	}
 	
 	@Override
 	public String toString(){
 		return tile.toString();
 	}
+
+	public int getCenterX() {
+		return centerX;
+	}
+
+	public void setCenterX(int centerX) {
+		this.centerX = centerX;
+	}
+
+	public int getCenterY() {
+		return centerY;
+	}
+
+	public void setCenterY(int centerY) {
+		this.centerY = centerY;
+	}
+	
+	public Tile getTile(){
+		return tile;
+	}
+	
+	public boolean isShapePresent(){
+		
+		for(Node n : getChildren()){
+			if(n instanceof Arc){
+				return true;
+			}
+		}
+		
+		return false;
+		
+	}
+	
 }

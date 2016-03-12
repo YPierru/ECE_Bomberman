@@ -1,32 +1,49 @@
 package ece.bomberman.yancle;
 
 import java.io.IOException;
+import java.io.Serializable;
 
-import ece.bomberman.yancle.map.MapGame;
+import ece.bomberman.yancle.map.MapPane;
+import ece.bomberman.yancle.map.tiles.EmptyTile;
+import ece.bomberman.yancle.map.tiles.Tile;
+import ece.bomberman.yancle.map.tiles.TileContainer;
 import ece.bomberman.yancle.view.InputIPAndPortController;
 import ece.bomberman.yancle.view.InputPortController;
 import ece.bomberman.yancle.view.StartFrameController;
 import javafx.application.Application;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 
 public class Main extends Application {
 
 	private Stage stage;
     private StackPane stackLayout;
+    private Scene scene;
+    private StartFrameController sfc;
+    private InputIPAndPortController iipc;
+    private InputPortController ipc;
 	
+    public static boolean QUICK=true;
+    
 	@Override
 	public void start(Stage primaryStage) {
 		stage = primaryStage;
-		
 		initRootLayout();
-		//displayStartFrame();
-		displayMap();
+		displayStartFrame();
+		
+		if(QUICK){
+			sfc.clickCreate();
+			ipc.clickStart();
+			sfc.clickJoin();
+			iipc.clickOK();
+		}
 	}
 	
 	
@@ -36,6 +53,7 @@ public class Main extends Application {
 	        FXMLLoader loader = new FXMLLoader();
 	        loader.setLocation(Main.class.getResource("view/RootLayout.fxml"));
 	        stackLayout = (StackPane) loader.load();
+	        scene = new Scene(stackLayout);
         
         }catch (IOException e) {
             e.printStackTrace();
@@ -50,6 +68,9 @@ public class Main extends Application {
             loader.setLocation(Main.class.getResource("view/StartFrame.fxml"));
             AnchorPane startFrame = (AnchorPane) loader.load();
             
+            startFrame.setPrefSize(300, 300);
+
+            stackLayout.setPrefSize(300, 300);
             stackLayout.getChildren().clear();
             stackLayout.getChildren().add(startFrame);
     		stage.setTitle("Bomberman");
@@ -58,8 +79,9 @@ public class Main extends Application {
             //stackLayout.setCenter(startFrame);
             
             // Give the controller access to the main app.
-            StartFrameController controller = loader.getController();
-            controller.setMain(this);
+            sfc = loader.getController();
+            sfc.setMain(this);
+    		showFrame();
             
         } catch (IOException e) {
             e.printStackTrace();
@@ -74,6 +96,9 @@ public class Main extends Application {
             loader.setLocation(Main.class.getResource("view/InputIPAndPort.fxml"));
             AnchorPane inputIpAndPort = (AnchorPane) loader.load();
 
+            inputIpAndPort.setPrefSize(330, 300);
+
+            stackLayout.setPrefSize(330, 300);
             stackLayout.getChildren().clear();
             stackLayout.getChildren().add(inputIpAndPort);
     		stage.setTitle("Bomberman - Join server");
@@ -82,8 +107,9 @@ public class Main extends Application {
             //stackLayout.setCenter(inputIpAndPort);
             
             // Give the controller access to the main app.
-            InputIPAndPortController controller = loader.getController();
-            controller.setMain(this);
+            iipc = loader.getController();
+            iipc.setMain(this);
+    		showFrame();
             
         } catch (IOException e) {
             e.printStackTrace();
@@ -97,6 +123,9 @@ public class Main extends Application {
             loader.setLocation(Main.class.getResource("view/InputPort.fxml"));
             AnchorPane inputPort = (AnchorPane) loader.load();
 
+            inputPort.setPrefSize(380, 150);
+
+            stackLayout.setPrefSize(380, 150);
             stackLayout.getChildren().clear();
             stackLayout.getChildren().add(inputPort);
     		stage.setTitle("Bomberman - Start server");
@@ -104,29 +133,56 @@ public class Main extends Application {
             // Set person overview into the center of root layout.
             //stackLayout.setCenter(inputIpAndPort);
             
-            InputPortController controller = loader.getController();
-            controller.setMain(this);
+            ipc = loader.getController();
+            ipc.setMain(this);
+    		showFrame();
             
         } catch (IOException e) {
             e.printStackTrace();
         }
 	}
 	
-	public void displayMap(){
+	public void displayMap(MapPane mp){
 
-        MapGame map = new MapGame();
-        map.setPrefSize(800, 600);
+       /*scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
+
+			@Override
+			public void handle(KeyEvent event) {
+				  System.out.println(event.getCode());
+			  if(event.getCode() == KeyCode.UP) {
+		            //map.moveCharacter(Orientation.NORTH);
+		          event.consume();
+		        }else if(event.getCode() == KeyCode.DOWN) {
+		            //map.moveCharacter(Orientation.SOUTH);
+		            event.consume();
+		        }else if(event.getCode() == KeyCode.RIGHT){
+		            //map.moveCharacter(Orientation.EAST);
+		            event.consume();
+		        }else if(event.getCode() == KeyCode.LEFT){
+		            //map.moveCharacter(Orientation.WEST);
+		            event.consume();
+		        }
+			}
+		});*/
+        
+        stackLayout.setPrefSize(TileContainer.SIZE_TILE*MapPane.TILES_NUMBER_X, TileContainer.SIZE_TILE*MapPane.TILES_NUMBER_Y);
         stackLayout.getChildren().clear();
-        stackLayout.getChildren().add(map);
+        stackLayout.getChildren().add(mp);
+        AnchorPane t = new AnchorPane();
+        if(t instanceof Serializable){
+        	System.out.println("kikoo");
+        }
+        
 		stage.setTitle("Bomberman - Map");
 		showFrame();
 
-		
-            
+	}
+	
+	public Scene getScene(){
+		return scene;
 	}
 	
 	public void showFrame(){
-        Scene scene = new Scene(stackLayout);
         stage.setScene(scene);
         stage.show();
         stage.sizeToScene();

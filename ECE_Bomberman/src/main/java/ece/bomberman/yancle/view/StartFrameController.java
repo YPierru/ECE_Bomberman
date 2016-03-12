@@ -20,6 +20,7 @@ public class StartFrameController implements Initializable {
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
+		
 	}
 	
 	@FXML
@@ -37,5 +38,12 @@ public class StartFrameController implements Initializable {
 		main=m;
 	}
 	
+	public void clickCreate(){
+		startServerButton.fire();
+	}
+	
+	public void clickJoin(){
+		joinServerButton.fire();
+	}
 
 }

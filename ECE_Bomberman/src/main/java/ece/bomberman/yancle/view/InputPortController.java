@@ -32,7 +32,6 @@ public class InputPortController implements Initializable{
 
 	@FXML
 	public void handleClick(){
-		System.out.println(port.getText());
 		
 		Server s =new Server(Integer.parseInt(port.getText()));
 		new Thread(s).start();
@@ -42,6 +41,11 @@ public class InputPortController implements Initializable{
 	
 	public void setMain(Main m){
 		main=m;
+	}
+	
+
+	public void clickStart(){
+		start.fire();
 	}
 	
 }

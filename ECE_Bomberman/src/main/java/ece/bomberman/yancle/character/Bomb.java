@@ -17,18 +17,23 @@ public class Bomb extends Circle{
 		initialize();
 	}
 	
-	public Bomb(Chronometer tim, int pow, double x, double y){
+	public Bomb(Chronometer tim, int pow){
 		super();
 		initialize();
 		setTimer(tim);
 		setPower(pow);
-		setX(x);
-		setY(y);
 	}
 	
 	public void initialize(){
 		setRadius(10);
 		setFill(Color.RED);
+	}
+	
+	public void moveTo(double x, double y){
+		setX(x);
+		setY(y);
+		setCenterX(x);
+		setCenterY(y);
 	}
 	
 	/**
@@ -85,7 +90,6 @@ public class Bomb extends Circle{
 	 */
 	public void setX(double x) {
 		this.x = x;
-		setCenterX(x);
 	}
 
 	/**
@@ -100,7 +104,6 @@ public class Bomb extends Circle{
 	 */
 	public void setY(double y) {
 		this.y = y;
-		setCenterY(y);
 	}
 
 }

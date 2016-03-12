@@ -5,13 +5,17 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane prefHeight="181.0" prefWidth="328.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ece.bomberman.yancle.view.InputIPAndPortController">
+<AnchorPane prefHeight="309.0" prefWidth="328.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ece.bomberman.yancle.view.InputIPAndPortController">
    <children>
-      <Label layoutX="62.0" layoutY="49.0" text="IP : " AnchorPane.leftAnchor="62.0" />
+      <Label layoutX="74.0" layoutY="49.0" text="IP : " AnchorPane.leftAnchor="74.0" />
       <Label layoutX="62.0" layoutY="100.0" text="Port : " AnchorPane.leftAnchor="62.0" />
       <Label layoutX="74.0" layoutY="6.0" text="Write and IP adress and a port" />
-      <TextField fx:id="ip" layoutX="99.0" layoutY="44.0" />
-      <TextField fx:id="port" layoutX="99.0" layoutY="95.0" />
-      <Button fx:id="join" layoutX="145.0" layoutY="140.0" mnemonicParsing="false" onAction="#handleClick" text="Join" />
+      <TextField fx:id="ip" layoutX="99.0" layoutY="44.0" onAction="#handleClick" text="localhost" />
+      <TextField fx:id="port" layoutX="99.0" layoutY="95.0" onAction="#handleClick" text="5657" />
+      <Button fx:id="join" layoutX="142.0" layoutY="250.0" mnemonicParsing="false" onAction="#handleClick" text="Join" />
+      <TextField fx:id="nickname" layoutX="99.0" layoutY="148.0" text="joueur1" />
+      <Label layoutX="26.0" layoutY="153.0" text="Nickname : " />
+      <ComboBox fx:id="color" layoutX="99.0" layoutY="194.0" prefHeight="27.0" prefWidth="167.0" />
+      <Label layoutX="54.0" layoutY="199.0" text="Color :" />
    </children>
 </AnchorPane>

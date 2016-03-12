@@ -1,7 +1,5 @@
 package ece.bomberman.yancle.map.tiles;
 
-import ece.bomberman.yancle.Constants;
-import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 
 
@@ -12,8 +10,13 @@ import javafx.scene.paint.Color;
  */
 public class EmptyTile extends Tile {
 
-	public EmptyTile(int x, int y){
-		super(x,y,Constants.SIZE_TILE,Constants.SIZE_TILE);
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	public EmptyTile(){
+		super();
 		initialize();
 	}
 
@@ -26,7 +29,7 @@ public class EmptyTile extends Tile {
 	
 	@Override
 	public String toString(){
-		return "Empty";
+		return "Empty X="+getX()+" Y="+getY()+"\n";
 	}
 	
 	

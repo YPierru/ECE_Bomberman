@@ -1,6 +1,5 @@
 package ece.bomberman.yancle.map.tiles;
 
-import ece.bomberman.yancle.Constants;
 import javafx.scene.paint.Color;
 
 /**
@@ -10,8 +9,13 @@ import javafx.scene.paint.Color;
  */
 public class UndestructibleWall extends Tile {
 
-	public UndestructibleWall(int x, int y) {
-		super(x,y,Constants.SIZE_TILE,Constants.SIZE_TILE);
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	public UndestructibleWall() {
+		super();
 		initialize();
 	}
 	
@@ -23,7 +27,7 @@ public class UndestructibleWall extends Tile {
 	
 	@Override
 	public String toString(){
-		return "UndestructibleWall";
+		return "UndestructibleWall X="+getX()+" Y="+getY()+"\n";
 	}
 
 }

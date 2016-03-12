@@ -1,7 +1,7 @@
 package ece.bomberman.yancle.map.tiles;
 
-import javafx.event.EventHandler;
-import javafx.scene.input.MouseEvent;
+import java.io.Serializable;
+
 import javafx.scene.shape.Rectangle;
 
 
@@ -11,25 +11,18 @@ import javafx.scene.shape.Rectangle;
  * @author YPierru
  *
  */
-public abstract class Tile extends Rectangle {
-	
-	public Tile(int x,int y,int w, int h){
-		super(x,y,w,h);
-		handleClick();
+public abstract class Tile extends Rectangle implements Serializable{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	public Tile(){
+		super(TileContainer.SIZE_TILE,TileContainer.SIZE_TILE);
+		//handleClick();
 	}
 	
 	public abstract void initialize();
 	//public abstract String getNameTile();
-	
-	public void handleClick(){
-		setOnMouseClicked(new EventHandler<MouseEvent>() {
-
-			@Override
-			public void handle(MouseEvent event) {
-				System.out.println("click on ");
-			}
-			
-		});
-	}
 
 }
