@@ -5,6 +5,8 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 
+import ece.bomberman.yancle.character.InfoPlayerStage;
+import ece.bomberman.yancle.character.Orientation;
 import ece.bomberman.yancle.character.Player;
 import ece.bomberman.yancle.map.MapController;
 import ece.bomberman.yancle.map.MapPane;
@@ -26,6 +28,7 @@ public class Client implements Runnable {
 	private Main main;
 	private Player player;
 	private Scene scene;
+	private InfoPlayerStage frameInfo;
 	
 	public Client(String i, int p, Main m, String pseudo, String color) {
 		ip = i;
@@ -40,6 +43,8 @@ public class Client implements Runnable {
 			e.printStackTrace();
 		}
 		
+		frameInfo = new InfoPlayerStage();
+		
 		mapPane = new MapPane();
 		main.displayMap(mapPane);
 		
@@ -51,22 +56,18 @@ public class Client implements Runnable {
 
 			@Override
 			public void handle(KeyEvent event) {
-				System.out.println(event.getCode());
+
 				if(event.getCode() == KeyCode.UP) {
-					player.setArrayY(player.getArrayY()-1);
-					//map.moveCharacter(Orientation.NORTH);
+					movePlayer(Orientation.NORTH);					
 					event.consume();
 				}else if(event.getCode() == KeyCode.DOWN) {
-					player.setArrayY(player.getArrayY()+1);
-				    //map.moveCharacter(Orientation.SOUTH);
+					movePlayer(Orientation.SOUTH);
 				    event.consume();
 				}else if(event.getCode() == KeyCode.RIGHT){
-					player.setArrayX(player.getArrayX()+1);
-				    //map.moveCharacter(Orientation.EAST);
+					movePlayer(Orientation.EAST);
 				    event.consume();
 				}else if(event.getCode() == KeyCode.LEFT){
-					player.setArrayX(player.getArrayX()-1);
-				    //map.moveCharacter(Orientation.WEST);
+					movePlayer(Orientation.WEST);
 				    event.consume();
 				}
 				
@@ -74,6 +75,14 @@ public class Client implements Runnable {
 			}
 		});
 
+	}
+	
+	public void movePlayer(Orientation or){
+		if(mapPane.isMovePossible(player, or)){
+			player.deplacement(or);
+		}else{
+			player.setOrientation(or);
+		}
 	}
 
 	public void sendPlayer(){
@@ -96,29 +105,24 @@ public class Client implements Runnable {
 				o=reader.readObject();
 				
 				if(o instanceof MapController){
-					//System.out.println("["+player.getName()+"]NEW MC RECEIVED");
-					mapController=null;
 					mapController=(MapController)o;
 				}else{
 					System.out.println("["+player.getName()+"]unknow received "+o.getClass());
 				}
 				
 				
-				Task<Void> task = new Task<Void>() {
-
-				     @Override protected Void call() throws Exception {
-                 
-				    	 Platform.runLater(new Runnable() {
-							
-							@Override
-							public void run() {
-								mapPane.addCharacter(mapController.getListPlayers());
-							}
-						});
-				         return null;
-				     }
-				 };
-				 new Thread(task).start();
+				for(Player p : mapController.getListPlayers()){
+					if(p.getName().equals(player.getName())){
+						player=p;
+						break;
+					}
+				}
+				
+				
+				
+				 new Thread(new UpdateFrameInfo()).start();
+				 
+				 new Thread(new UpdateMapPane()).start();
 				 
 
 				 if(!player.isDisplayed()){
@@ -136,4 +140,39 @@ public class Client implements Runnable {
 			}
 		}
 	}
+	
+	
+	private class UpdateFrameInfo extends Task<Void>{
+
+		@Override
+		protected Void call() throws Exception {
+			Platform.runLater(new Runnable() {
+				
+				@Override
+				public void run() {
+					frameInfo.setData(player, mapController.getListPlayers());
+					frameInfo.display();
+				}
+			});
+			return null;
+		}
+		
+	}
+	
+	private class UpdateMapPane extends Task<Void>{
+
+		@Override
+		protected Void call() throws Exception {
+			Platform.runLater(new Runnable() {
+				
+				@Override
+				public void run() {
+					mapPane.addCharacter(mapController.getListPlayers());
+				}
+			});
+			return null;
+		}
+		
+	}
+	
 }

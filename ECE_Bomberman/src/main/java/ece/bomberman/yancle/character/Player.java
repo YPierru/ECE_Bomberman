@@ -23,9 +23,12 @@ public class Player implements Serializable{
 	private long timer;
 	private int power;
 	private int numberMaxOfBombe;
+	private int speed=300;//ms
 	private HashSet<Bomb> bombSet;
 	private int arrayX;
 	private int arrayY;
+	private int centerX;
+	private int centerY;
 	private Orientation orientation = Orientation.EAST;
 	private String name;
 	private String color;
@@ -51,8 +54,7 @@ public class Player implements Serializable{
 	public Arc getShape(){
 		Arc shape = new Arc();
         shape.setRadiusX(RADIUS);
-        shape. setRadiusY(RADIUS);
-        shape.setStartAngle(START_ANGLE);
+        shape.setRadiusY(RADIUS);
         shape.setLength(LENGTH);
 		if(color.equals("Blue")){
 	        shape.setFill(Color.BLUE);
@@ -62,6 +64,22 @@ public class Player implements Serializable{
 	        shape.setFill(Color.GREEN);		
 		}
         shape.setType(ARC_TYPE);
+        shape.setCenterX(centerX);
+        shape.setCenterY(centerY);
+        
+        if(orientation == Orientation.NORTH){
+			shape.setStartAngle(135);
+		}
+		else if(orientation == Orientation.SOUTH){
+			shape.setStartAngle(-45);
+		}
+		else if(orientation == Orientation.EAST){
+			shape.setStartAngle(45);
+		}
+		else if(orientation == Orientation.WEST){
+			shape.setStartAngle(225);
+		}
+        
         return shape;
 	}
 
@@ -83,42 +101,22 @@ public class Player implements Serializable{
 	}
 	
 	public void deplacement(Orientation or){
-		Arc shape = getShape();
 		if(or == Orientation.NORTH){
 			setArrayY(arrayY-1);
-			shape.setStartAngle(135);
 		}
 		else if(or == Orientation.SOUTH){
 			setArrayY(arrayY+1);
-			shape.setStartAngle(-45);
 		}
 		else if(or == Orientation.EAST){
 			setArrayX(arrayX+1);
-			shape.setStartAngle(45);
 		}
 		else if(or == Orientation.WEST){
 			setArrayX(arrayX-1);
-			shape.setStartAngle(225);
 		}	
-		
-		orientation = or;
+		setOrientation(or);
 	}
 	
-	public void setOrientation(Orientation or){
-		Arc shape = getShape();
-		if(or == Orientation.NORTH){
-			shape.setStartAngle(135);
-		}
-		else if(or == Orientation.SOUTH){
-			shape.setStartAngle(-45);
-		}
-		else if(or == Orientation.EAST){
-			shape.setStartAngle(45);
-		}
-		else if(or == Orientation.WEST){
-			shape.setStartAngle(225);
-		}	
-		
+	public void setOrientation(Orientation or){		
 		orientation=or;
 	}
 	
@@ -238,6 +236,30 @@ public class Player implements Serializable{
 
 	public void setDisplayed(boolean isDisplayed) {
 		this.isDisplayed = isDisplayed;
+	}
+
+	public int getCenterX() {
+		return centerX;
+	}
+
+	public void setCenterX(int centerX) {
+		this.centerX = centerX;
+	}
+
+	public int getCenterY() {
+		return centerY;
+	}
+
+	public void setCenterY(int centerY) {
+		this.centerY = centerY;
+	}
+
+	public int getSpeed() {
+		return speed;
+	}
+
+	public void setSpeed(int speed) {
+		this.speed = speed;
 	}
 	
 }

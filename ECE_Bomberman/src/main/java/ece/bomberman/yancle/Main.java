@@ -30,7 +30,7 @@ public class Main extends Application {
     private InputIPAndPortController iipc;
     private InputPortController ipc;
 	
-    public static boolean QUICK=true;
+    public static boolean QUICK=false;
     
 	@Override
 	public void start(Stage primaryStage) {
@@ -44,6 +44,7 @@ public class Main extends Application {
 			sfc.clickJoin();
 			iipc.clickOK();
 		}
+		
 	}
 	
 	

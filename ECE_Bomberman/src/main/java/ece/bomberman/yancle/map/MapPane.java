@@ -94,7 +94,7 @@ public class MapPane extends AnchorPane implements Serializable {
 		for(int j=0;j<TILES_NUMBER_Y;j++){
 			for(int i=0;i<TILES_NUMBER_X;i++){
 				if(tilesContainer[i][j].isShapePresent()){
-					//tilesContainer[i][j].getChildren().remove(tilesContainer[i][j].getChildren().size()-1);
+					tilesContainer[i][j].getChildren().remove(tilesContainer[i][j].getChildren().size()-1);
 				}
 			}
 		}
@@ -103,24 +103,21 @@ public class MapPane extends AnchorPane implements Serializable {
 			shape = p.getShape();
 			tc = tilesContainer[p.getArrayX()][p.getArrayY()];
 
+			//Animation
 			Timeline timeline = new Timeline();
-			
-			System.out.println(shape.getCenterX()+" "+tc.getCenterX());
-			
-			/*KeyValue kv = new KeyValue(shape.centerXProperty(), tc.getCenterX());
-			KeyFrame kf = new KeyFrame(Duration.millis(500), kv);
+			KeyValue kv = new KeyValue(shape.centerXProperty(), tc.getCenterX());
+			KeyFrame kf = new KeyFrame(Duration.millis(p.getSpeed()), kv);
 			KeyValue kv2 = new KeyValue(shape.centerYProperty(), tc.getCenterY());
-			KeyFrame kf2 = new KeyFrame(Duration.millis(500), kv2);
+			KeyFrame kf2 = new KeyFrame(Duration.millis(p.getSpeed()), kv2);
 			timeline.getKeyFrames().add(kf);
 			timeline.getKeyFrames().add(kf2);
-			timeline.play();*/
+			timeline.play();
 			
-			shape.setCenterX(tc.getCenterX());
-			shape.setCenterY(tc.getCenterY());
+			p.setCenterX(tc.getCenterX());
+			p.setCenterY(tc.getCenterY());
+			
 			tc.getChildren().add(shape);
 			
-
-			System.out.println(shape.centerXProperty().doubleValue()+" "+tc.getCenterX());
 		}
 	}
 	
@@ -137,7 +134,7 @@ public class MapPane extends AnchorPane implements Serializable {
 		return str;
 	}
 	
-	public void moveCharacter(Player p,Orientation orientation){
+	public boolean isMovePossible(Player p,Orientation orientation){
 		
 		int possibleX=p.getArrayX();
 		int possibleY=p.getArrayY();
@@ -160,14 +157,11 @@ public class MapPane extends AnchorPane implements Serializable {
 		tile = tilesContainer[possibleX][possibleY].getTile();
 		
 		if(tile instanceof EmptyTile){
-			p.deplacement(orientation);
-			TileContainer tc = tilesContainer[p.getArrayX()][p.getArrayY()];
-			shape.setCenterX(tc.getCenterX());
-			shape.setCenterY(tc.getCenterY());
-			tc.getChildren().add(shape);
+			return true;
+		}else{
+			return false;
 		}
 		
-		p.setOrientation(orientation);
 		
 	}
 	
