@@ -8,7 +8,7 @@
 <AnchorPane prefHeight="153.0" prefWidth="389.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ece.bomberman.yancle.view.InputPortController">
    <children>
       <Label layoutX="108.0" layoutY="14.0" text="Select a port for your server" />
-      <TextField fx:id="port" layoutX="111.0" layoutY="63.0" onAction="#handleClick" text="5657" />
+      <TextField fx:id="port" layoutX="111.0" layoutY="63.0" onAction="#handleClick" text="1111" />
       <Button fx:id="start" layoutX="171.0" layoutY="104.0" mnemonicParsing="false" onAction="#handleClick" text="Start" />
       <Label fx:id="info" layoutX="281.0" layoutY="109.0" />
    </children>

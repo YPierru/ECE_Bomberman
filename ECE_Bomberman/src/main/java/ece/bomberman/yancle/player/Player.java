@@ -1,4 +1,4 @@
-package ece.bomberman.yancle.character;
+package ece.bomberman.yancle.player;
 
 import java.io.Serializable;
 import java.util.HashSet;
@@ -33,6 +33,7 @@ public class Player implements Serializable{
 	private String name;
 	private String color;
 	private boolean isDisplayed;
+	private boolean positionUpdated;
 
 	public static final double RADIUS = 20.0f;
 	public static final double START_ANGLE = 45.0f;
@@ -42,6 +43,7 @@ public class Player implements Serializable{
 	
 	public Player(String c, String n){
 		isDisplayed=false;
+		positionUpdated=true;
 		life = 5;
 		numberMaxOfBombe = 3;
 		bombSet = new HashSet<Bomb>();
@@ -261,5 +263,14 @@ public class Player implements Serializable{
 	public void setSpeed(int speed) {
 		this.speed = speed;
 	}
+
+	public boolean isPositionUpdated() {
+		return positionUpdated;
+	}
+
+	public void setPositionUpdated(boolean positionUpdated) {
+		this.positionUpdated = positionUpdated;
+	}
+	
 	
 }

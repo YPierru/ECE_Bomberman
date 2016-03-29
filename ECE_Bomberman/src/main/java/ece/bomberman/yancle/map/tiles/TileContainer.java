@@ -2,6 +2,7 @@ package ece.bomberman.yancle.map.tiles;
 
 import java.io.Serializable;
 
+import ece.bomberman.yancle.player.Player;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.image.Image;
@@ -70,16 +71,36 @@ public class TileContainer extends Pane implements Serializable{
 		return tile;
 	}
 	
-	public boolean isShapePresent(){
-		
+	public boolean isArcPresent(){
 		for(Node n : getChildren()){
 			if(n instanceof Arc){
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public boolean isPlayerPresent(Player p){
+		
+		Node n;
+		
+		for(int i = 0;i<getChildren().size();i++){
+			n=getChildren().get(i);
+			if(n instanceof Arc && getCenterX()==p.getCenterX() && getCenterY()==p.getCenterY()){
 				return true;
 			}
 		}
 		
 		return false;
 		
+	}
+	
+	public void removePlayer(){
+		for(int i = 0;i<getChildren().size();i++){
+			if(getChildren().get(i) instanceof Arc){
+				getChildren().remove(i);
+			}
+		}
 	}
 	
 }

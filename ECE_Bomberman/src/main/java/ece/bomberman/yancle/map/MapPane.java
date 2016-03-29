@@ -1,22 +1,20 @@
 package ece.bomberman.yancle.map;
 
-import java.awt.Color;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Random;
 
-import ece.bomberman.yancle.character.Orientation;
-import ece.bomberman.yancle.character.Player;
 import ece.bomberman.yancle.map.tiles.EmptyTile;
 import ece.bomberman.yancle.map.tiles.Tile;
 import ece.bomberman.yancle.map.tiles.TileContainer;
 import ece.bomberman.yancle.map.tiles.UndestructibleWall;
+import ece.bomberman.yancle.player.Orientation;
+import ece.bomberman.yancle.player.Player;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.shape.Arc;
-import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 
 /**
@@ -87,36 +85,49 @@ public class MapPane extends AnchorPane implements Serializable {
 		return tilesContainer;
 	}
 	
-	public void addCharacter(ArrayList<Player> listPlayers){
+	public void displayCharacters(ArrayList<Player> listPlayers){
 		TileContainer tc;
 		Arc shape;
 		
-		for(int j=0;j<TILES_NUMBER_Y;j++){
+		
+		/*for(int j=0;j<TILES_NUMBER_Y;j++){
 			for(int i=0;i<TILES_NUMBER_X;i++){
 				if(tilesContainer[i][j].isShapePresent()){
 					tilesContainer[i][j].getChildren().remove(tilesContainer[i][j].getChildren().size()-1);
 				}
 			}
-		}
+		}*/
 		
 		for(Player p : listPlayers){
-			shape = p.getShape();
-			tc = tilesContainer[p.getArrayX()][p.getArrayY()];
-
-			//Animation
-			Timeline timeline = new Timeline();
-			KeyValue kv = new KeyValue(shape.centerXProperty(), tc.getCenterX());
-			KeyFrame kf = new KeyFrame(Duration.millis(p.getSpeed()), kv);
-			KeyValue kv2 = new KeyValue(shape.centerYProperty(), tc.getCenterY());
-			KeyFrame kf2 = new KeyFrame(Duration.millis(p.getSpeed()), kv2);
-			timeline.getKeyFrames().add(kf);
-			timeline.getKeyFrames().add(kf2);
-			timeline.play();
-			
-			p.setCenterX(tc.getCenterX());
-			p.setCenterY(tc.getCenterY());
-			
-			tc.getChildren().add(shape);
+			if (p.isPositionUpdated()){
+				
+				for(int j=0;j<TILES_NUMBER_Y;j++){
+					for(int i=0;i<TILES_NUMBER_X;i++){
+						if(tilesContainer[i][j].isPlayerPresent(p)){
+							tilesContainer[i][j].removePlayer();
+						}
+					}
+				}
+				
+				shape = p.getShape();
+				tc = tilesContainer[p.getArrayX()][p.getArrayY()];
+	
+				//Animation
+				Timeline timeline = new Timeline();
+				KeyValue kv = new KeyValue(shape.centerXProperty(), tc.getCenterX());
+				KeyFrame kf = new KeyFrame(Duration.millis(p.getSpeed()), kv);
+				KeyValue kv2 = new KeyValue(shape.centerYProperty(), tc.getCenterY());
+				KeyFrame kf2 = new KeyFrame(Duration.millis(p.getSpeed()), kv2);
+				timeline.getKeyFrames().add(kf);
+				timeline.getKeyFrames().add(kf2);
+				timeline.play();
+				
+				p.setCenterX(tc.getCenterX());
+				p.setCenterY(tc.getCenterY());
+				p.setPositionUpdated(false);
+				
+				tc.getChildren().add(shape);
+			}
 			
 		}
 	}
@@ -172,7 +183,7 @@ public class MapPane extends AnchorPane implements Serializable {
 		
 		for(int j=0;j<TILES_NUMBER_Y;j++){
 			for(int i=0;i<TILES_NUMBER_X;i++){
-				if(tilesContainer[i][j].getTile() instanceof EmptyTile && !tilesContainer[i][j].isShapePresent()){
+				if(tilesContainer[i][j].getTile() instanceof EmptyTile && !tilesContainer[i][j].isArcPresent()){
 					xy[0]=i;
 					xy[1]=j;
 					coordinates.add(xy);

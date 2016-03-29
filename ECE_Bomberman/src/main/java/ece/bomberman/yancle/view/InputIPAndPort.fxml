@@ -11,7 +11,7 @@
       <Label layoutX="62.0" layoutY="100.0" text="Port : " AnchorPane.leftAnchor="62.0" />
       <Label layoutX="74.0" layoutY="6.0" text="Write and IP adress and a port" />
       <TextField fx:id="ip" layoutX="99.0" layoutY="44.0" onAction="#handleClick" text="localhost" />
-      <TextField fx:id="port" layoutX="99.0" layoutY="95.0" onAction="#handleClick" text="5657" />
+      <TextField fx:id="port" layoutX="99.0" layoutY="95.0" onAction="#handleClick" text="1111" />
       <Button fx:id="join" layoutX="142.0" layoutY="250.0" mnemonicParsing="false" onAction="#handleClick" text="Join" />
       <TextField fx:id="nickname" layoutX="99.0" layoutY="148.0" text="joueur1" />
       <Label layoutX="26.0" layoutY="153.0" text="Nickname : " />

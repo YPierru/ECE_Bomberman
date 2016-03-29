@@ -1,4 +1,4 @@
-package ece.bomberman.yancle.character;
+package ece.bomberman.yancle.player;
 
 import ece.bomberman.yancle.utility.Chronometer;
 import javafx.scene.paint.Color;

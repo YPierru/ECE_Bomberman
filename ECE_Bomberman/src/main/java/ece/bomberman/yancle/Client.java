@@ -5,11 +5,11 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 
-import ece.bomberman.yancle.character.InfoPlayerStage;
-import ece.bomberman.yancle.character.Orientation;
-import ece.bomberman.yancle.character.Player;
 import ece.bomberman.yancle.map.MapController;
 import ece.bomberman.yancle.map.MapPane;
+import ece.bomberman.yancle.player.InfoPlayerStage;
+import ece.bomberman.yancle.player.Orientation;
+import ece.bomberman.yancle.player.Player;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.event.EventHandler;
@@ -83,6 +83,7 @@ public class Client implements Runnable {
 		}else{
 			player.setOrientation(or);
 		}
+		player.setPositionUpdated(true);
 	}
 
 	public void sendPlayer(){
@@ -113,6 +114,7 @@ public class Client implements Runnable {
 				
 				for(Player p : mapController.getListPlayers()){
 					if(p.getName().equals(player.getName())){
+						System.out.println("là");
 						player=p;
 						break;
 					}
@@ -126,6 +128,7 @@ public class Client implements Runnable {
 				 
 
 				 if(!player.isDisplayed()){
+					 System.out.println("coucou");
 					int[] xyPlayer = mapPane.getEmptyArrayXY();
 					player.setArrayX(xyPlayer[0]);
 					player.setArrayY(xyPlayer[1]);
@@ -167,7 +170,7 @@ public class Client implements Runnable {
 				
 				@Override
 				public void run() {
-					mapPane.addCharacter(mapController.getListPlayers());
+					mapPane.displayCharacters(mapController.getListPlayers());
 				}
 			});
 			return null;

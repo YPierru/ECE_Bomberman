@@ -5,8 +5,8 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 
-import ece.bomberman.yancle.character.Player;
 import ece.bomberman.yancle.map.MapController;
+import ece.bomberman.yancle.player.Player;
 
 public class Server implements Runnable{
 	
