@@ -46,6 +46,12 @@ public class Server implements Runnable{
 					public void addPlayer(Player p){
 						mapController.addCharacter(p);
 					}
+					
+
+					@Override
+					public void updateListDestructibleWalls(ArrayList<Integer[]> list){
+						mapController.setListDestructibleWall(list);
+					}
 				};
 				
 				listPlayers.add(player);

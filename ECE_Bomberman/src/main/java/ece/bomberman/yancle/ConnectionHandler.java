@@ -4,9 +4,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
+import java.util.ArrayList;
 
 import ece.bomberman.yancle.map.MapController;
 import ece.bomberman.yancle.player.Player;
@@ -49,6 +47,8 @@ public abstract class ConnectionHandler implements Runnable {
 			
 				if(o instanceof Player){
 					addPlayer((Player)o);
+				}else if(o instanceof ArrayList<?>){
+					updateListDestructibleWalls((ArrayList<Integer[]>)o);
 				}
 
 				broadcastMapController();
@@ -63,5 +63,6 @@ public abstract class ConnectionHandler implements Runnable {
 	
 	public abstract void broadcastMapController();
 	public abstract void addPlayer(Player p);
+	public abstract void updateListDestructibleWalls(ArrayList<Integer[]> list);
 	
 }
