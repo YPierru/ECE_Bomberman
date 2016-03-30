@@ -27,7 +27,7 @@ public class DestructibleWall extends Tile {
 	
 	@Override
 	public String toString(){
-		return "DestructibleWall";
+		return "DestructibleWall X="+getX()+" Y="+getY()+"\n";
 	}
 
 }

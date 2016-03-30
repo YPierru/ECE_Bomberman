@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.ArrayList;
 
 import ece.bomberman.yancle.map.MapController;
 import ece.bomberman.yancle.map.MapPane;
@@ -57,21 +58,41 @@ public class Client implements Runnable {
 			@Override
 			public void handle(KeyEvent event) {
 
+				
 				if(event.getCode() == KeyCode.UP) {
 					movePlayer(Orientation.NORTH);					
 					event.consume();
+					sendPlayer();
 				}else if(event.getCode() == KeyCode.DOWN) {
 					movePlayer(Orientation.SOUTH);
 				    event.consume();
+				    sendPlayer();
 				}else if(event.getCode() == KeyCode.RIGHT){
 					movePlayer(Orientation.EAST);
 				    event.consume();
+				    sendPlayer();
 				}else if(event.getCode() == KeyCode.LEFT){
 					movePlayer(Orientation.WEST);
 				    event.consume();
+				    sendPlayer();
+				}else if(event.getCode() == KeyCode.SPACE){
+					ArrayList<Integer[]> list = mapController.getListDestructibleWall();
+					for(int i=0;i<list.size();i++){
+						if(list.get(i)[0]==3 && list.get(i)[1]==1){
+							list.remove(list.get(i));
+						}
+					}
+					try {
+						writer.reset();
+						writer.writeObject(list);
+						writer.flush();
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 				}
 				
-				sendPlayer();
+				//sendPlayer();
 			}
 		});
 
@@ -100,12 +121,12 @@ public class Client implements Runnable {
 	@Override
 	public void run() {
 		Object o;
-		int iteration = 1;
+		//int iteration = 1;
 		while (true) {
 			try {
 							
 				o=reader.readObject();
-				System.out.println(iteration);
+				//System.out.println(iteration);
 				
 				if(o instanceof MapController){
 					mapController=(MapController)o;
@@ -121,7 +142,7 @@ public class Client implements Runnable {
 					}
 				}
 				
-				 new Thread(new UpdateFrameInfo()).start();
+				 //new Thread(new UpdateFrameInfo()).start();
 				 
 				 new Thread(new UpdateMapPane()).start();
 				 
@@ -135,7 +156,7 @@ public class Client implements Runnable {
 				 }
 				 
 
-				 iteration ++;
+				 //iteration ++;
 			} catch (ClassNotFoundException | IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

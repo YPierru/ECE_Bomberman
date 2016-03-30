@@ -63,5 +63,9 @@ public class MapController implements Serializable{
 	public ArrayList<Integer[]> getListDestructibleWall(){
 		return listDestructibleWall;
 	}
+	
+	public void setListDestructibleWall(ArrayList<Integer[]> list){
+		listDestructibleWall = list;
+	}
 
 }

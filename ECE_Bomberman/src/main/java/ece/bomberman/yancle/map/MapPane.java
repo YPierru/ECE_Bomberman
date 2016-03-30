@@ -129,8 +129,8 @@ public class MapPane extends AnchorPane implements Serializable {
 	}
 	
 	public void displayDestructibleWalls(ArrayList<Integer[]> listCooDW){
-		TileContainer tc;
-		
+		int x,y;
+
 		for(int j=0;j<TILES_NUMBER_Y;j++){
 			for(int i=0;i<TILES_NUMBER_X;i++){
 				tilesContainer[i][j].removeDestructibleWallIfPresent();
@@ -138,9 +138,13 @@ public class MapPane extends AnchorPane implements Serializable {
 		}
 		
 		for(int i=0;i<listCooDW.size();i++){
-			System.out.println(listCooDW.get(i)[0]+" "+listCooDW.get(i)[1]);
-			tilesContainer[listCooDW.get(i)[0]][listCooDW.get(i)[1]] = new TileContainer(new DestructibleWall(),listCooDW.get(i)[0]*TileContainer.SIZE_TILE, listCooDW.get(i)[1]*TileContainer.SIZE_TILE);
+			x=listCooDW.get(i)[0];
+			y=listCooDW.get(i)[1];
+			getChildren().remove(tilesContainer[x][y]);
+			tilesContainer[x][y] = new TileContainer(new DestructibleWall(),x*TileContainer.SIZE_TILE, y*TileContainer.SIZE_TILE);
+			getChildren().add(tilesContainer[x][y]);
 		}
+		
 	}
 	
 	@Override
