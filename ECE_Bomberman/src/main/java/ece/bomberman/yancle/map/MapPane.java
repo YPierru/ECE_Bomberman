@@ -9,6 +9,7 @@ import ece.bomberman.yancle.map.tiles.EmptyTile;
 import ece.bomberman.yancle.map.tiles.Tile;
 import ece.bomberman.yancle.map.tiles.TileContainer;
 import ece.bomberman.yancle.map.tiles.UndestructibleWall;
+import ece.bomberman.yancle.player.IInteractiveShape;
 import ece.bomberman.yancle.player.Orientation;
 import ece.bomberman.yancle.player.Player;
 import javafx.animation.KeyFrame;
@@ -16,12 +17,13 @@ import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.shape.Arc;
+import javafx.scene.shape.Shape;
 import javafx.util.Duration;
 
 /**
  * Represent the board game.
  * Extends an AnchorPane
- * @author YPierru
+ *
  *
  */
 public class MapPane extends AnchorPane implements Serializable {
@@ -97,13 +99,13 @@ public class MapPane extends AnchorPane implements Serializable {
 				
 				for(int j=0;j<TILES_NUMBER_Y;j++){
 					for(int i=0;i<TILES_NUMBER_X;i++){
-						if(tilesContainer[i][j].isPlayerPresent(p)){
+						if(tilesContainer[i][j].isInteractiveShapePresent(p)){
 							tilesContainer[i][j].removePlayer();
 						}
 					}
 				}
 				
-				shape = p.getShape();
+				shape = (Arc) p.getShape();
 				tc = tilesContainer[p.getArrayX()][p.getArrayY()];
 	
 				//Animation
@@ -120,7 +122,7 @@ public class MapPane extends AnchorPane implements Serializable {
 				p.setCenterY(tc.getCenterY());
 				p.setPositionUpdated(false);
 				
-				if(!tc.isPlayerPresent(p)){
+				if(!tc.isInteractiveShapePresent(p)){
 					tc.addShape(shape);
 				}
 			}
@@ -156,7 +158,7 @@ public class MapPane extends AnchorPane implements Serializable {
 		return str;
 	}
 	
-	public boolean isMovePossible(Player p,Orientation orientation){
+	public boolean isMovePossible(IInteractiveShape p,Orientation orientation){
 		
 		int possibleX=p.getArrayX();
 		int possibleY=p.getArrayY();

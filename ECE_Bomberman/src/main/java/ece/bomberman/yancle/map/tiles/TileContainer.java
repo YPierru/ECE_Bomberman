@@ -2,6 +2,7 @@ package ece.bomberman.yancle.map.tiles;
 
 import java.io.Serializable;
 
+import ece.bomberman.yancle.player.IInteractiveShape;
 import ece.bomberman.yancle.player.Player;
 import javafx.scene.Node;
 import javafx.scene.layout.Pane;
@@ -95,7 +96,7 @@ public class TileContainer extends Pane implements Serializable{
 		}
 	}
 	
-	public boolean isPlayerPresent(Player p){
+	public boolean isInteractiveShapePresent(IInteractiveShape p){
 		
 		Node n;
 		

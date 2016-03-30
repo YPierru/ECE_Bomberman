@@ -5,8 +5,9 @@ import java.io.Serializable;
 import ece.bomberman.yancle.utility.Chronometer;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.Shape;
 
-public class Bomb implements Serializable{
+public class Bomb implements Serializable, IInteractiveShape{
 	/**
 	 * 
 	 */
@@ -14,16 +15,20 @@ public class Bomb implements Serializable{
 	private Chronometer timer;
 	private long seuil;
 	private int power;
-	private double x;
-	private double y;
+	private int arrayX;
+	private int arrayY;
+	private int centerX;
+	private int centerY;
 	
 	
 	public Bomb(){
 		super();
 	}
 	
-	public Bomb(Chronometer tim, int pow){
+	public Bomb(Chronometer tim, int pow, int arrayX, int arrayY ){
 		super();
+		setArrayX(arrayX);
+		setArrayY(arrayY);
 		setTimer(tim);
 		setPower(pow);
 	}
@@ -74,29 +79,68 @@ public class Bomb implements Serializable{
 	/**
 	 * @return the x
 	 */
-	public double getX() {
-		return x;
+	@Override
+	public int getArrayX() {
+		return arrayX;
 	}
 
 	/**
 	 * @param x the x to set
 	 */
-	public void setX(double x) {
-		this.x = x;
+	@Override
+	public void setArrayX(int x) {
+		this.arrayX = x;
 	}
 
 	/**
 	 * @return the y
 	 */
-	public double getY() {
-		return y;
+	@Override
+	public int getArrayY() {
+		return arrayY;
 	}
 
 	/**
 	 * @param y the y to set
 	 */
-	public void setY(double y) {
-		this.y = y;
+	public void setArrayY(int y) {
+		this.arrayY = y;
+	}
+
+	
+	@Override
+	public Shape getShape() {
+		Circle shape = new Circle();
+		shape.setRadius(5);
+		shape.setCenterX(centerX);
+		shape.setCenterY(centerY);
+		shape.setFill(Color.GREENYELLOW);
+		return shape;
+	}
+
+
+	@Override
+	public int getCenterX() {
+		// TODO Auto-generated method stub
+		return centerX;
+	}
+
+	@Override
+	public int getCenterY() {
+		// TODO Auto-generated method stub
+		return centerY;
+	}
+
+	@Override
+	public void setCenterX(int X) {
+		// TODO Auto-generated method stub
+		centerX = X;
+	}
+
+	@Override
+	public void setCenterY(int Y) {
+		// TODO Auto-generated method stub
+		centerY = Y;
 	}
 
 }

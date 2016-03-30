@@ -3,17 +3,13 @@ package ece.bomberman.yancle.player;
 import java.io.Serializable;
 import java.util.HashSet;
 
-import ece.bomberman.yancle.map.tiles.TileContainer;
 import ece.bomberman.yancle.utility.Chronometer;
-import javafx.event.EventHandler;
-import javafx.scene.control.Tooltip;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Arc;
 import javafx.scene.shape.ArcType;
+import javafx.scene.shape.Shape;
 
-public class Player implements Serializable{
+public class Player implements Serializable, IInteractiveShape{
 
 	/**
 	 * 
@@ -53,7 +49,8 @@ public class Player implements Serializable{
 		name=n;
 	}
 	
-	public Arc getShape(){
+	@Override
+	public Shape getShape(){
 		Arc shape = new Arc();
         shape.setRadiusX(RADIUS);
         shape.setRadiusY(RADIUS);
@@ -88,7 +85,18 @@ public class Player implements Serializable{
 	public Boolean poserBombe(){
 		Boolean rtr = false;
 		if(bombSet.size()<numberMaxOfBombe){
-			bombSet.add(new Bomb(new Chronometer(System.currentTimeMillis()/1000),power));
+			if(orientation.equals("EAST")){
+				bombSet.add(new Bomb(new Chronometer(System.currentTimeMillis()/1000),power, arrayX+1, arrayY));
+			}
+			else if(orientation.equals("WEST")){
+				bombSet.add(new Bomb(new Chronometer(System.currentTimeMillis()/1000),power, arrayX-1, arrayY));
+			}
+			else if(orientation.equals("NORTH")){
+				bombSet.add(new Bomb(new Chronometer(System.currentTimeMillis()/1000),power, arrayX, arrayY+1));
+			}
+			else{
+				bombSet.add(new Bomb(new Chronometer(System.currentTimeMillis()/1000),power, arrayX, arrayY-1));
+			}
 			rtr = true;
 		}
 		return rtr;
@@ -195,6 +203,7 @@ public class Player implements Serializable{
 	/**
 	 * @return the x
 	 */
+	@Override
 	public int getArrayX() {
 		return arrayX;
 	}
@@ -202,6 +211,7 @@ public class Player implements Serializable{
 	/**
 	 * @param x the x to set
 	 */
+	@Override
 	public void setArrayX(int x) {
 		this.arrayX = x;
 	}
@@ -209,6 +219,7 @@ public class Player implements Serializable{
 	/**
 	 * @return the y
 	 */
+	@Override
 	public int getArrayY() {
 		return arrayY;
 	}
@@ -216,6 +227,7 @@ public class Player implements Serializable{
 	/**
 	 * @param y the y to set
 	 */
+	@Override
 	public void setArrayY(int y) {
 		this.arrayY = y;
 	}
@@ -239,19 +251,19 @@ public class Player implements Serializable{
 	public void setDisplayed(boolean isDisplayed) {
 		this.isDisplayed = isDisplayed;
 	}
-
+	@Override
 	public int getCenterX() {
 		return centerX;
 	}
-
+	@Override
 	public void setCenterX(int centerX) {
 		this.centerX = centerX;
 	}
-
+	@Override
 	public int getCenterY() {
 		return centerY;
 	}
-
+	@Override
 	public void setCenterY(int centerY) {
 		this.centerY = centerY;
 	}
