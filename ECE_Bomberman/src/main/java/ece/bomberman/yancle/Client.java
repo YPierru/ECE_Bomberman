@@ -100,10 +100,12 @@ public class Client implements Runnable {
 	@Override
 	public void run() {
 		Object o;
+		int iteration = 1;
 		while (true) {
 			try {
-								
+							
 				o=reader.readObject();
+				System.out.println(iteration);
 				
 				if(o instanceof MapController){
 					mapController=(MapController)o;
@@ -114,13 +116,10 @@ public class Client implements Runnable {
 				
 				for(Player p : mapController.getListPlayers()){
 					if(p.getName().equals(player.getName())){
-						System.out.println("là");
 						player=p;
 						break;
 					}
 				}
-				
-				
 				
 				 new Thread(new UpdateFrameInfo()).start();
 				 
@@ -128,7 +127,6 @@ public class Client implements Runnable {
 				 
 
 				 if(!player.isDisplayed()){
-					 System.out.println("coucou");
 					int[] xyPlayer = mapPane.getEmptyArrayXY();
 					player.setArrayX(xyPlayer[0]);
 					player.setArrayY(xyPlayer[1]);
@@ -137,6 +135,7 @@ public class Client implements Runnable {
 				 }
 				 
 
+				 iteration ++;
 			} catch (ClassNotFoundException | IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -171,6 +170,7 @@ public class Client implements Runnable {
 				@Override
 				public void run() {
 					mapPane.displayCharacters(mapController.getListPlayers());
+					mapPane.displayDestructibleWalls(mapController.getListDestructibleWall());
 				}
 			});
 			return null;

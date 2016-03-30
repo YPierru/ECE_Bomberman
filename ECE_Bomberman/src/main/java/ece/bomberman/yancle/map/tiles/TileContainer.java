@@ -3,12 +3,10 @@ package ece.bomberman.yancle.map.tiles;
 import java.io.Serializable;
 
 import ece.bomberman.yancle.player.Player;
-import javafx.collections.ObservableList;
 import javafx.scene.Node;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Arc;
+import javafx.scene.shape.Shape;
 
 /**
  * Represents a tile container
@@ -80,6 +78,23 @@ public class TileContainer extends Pane implements Serializable{
 		return false;
 	}
 	
+	public boolean isDestructibleWallPresent(){
+		for(Node n : getChildren()){
+			if(n instanceof DestructibleWall){
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public void removeDestructibleWallIfPresent(){
+		for(int i = 0;i<getChildren().size();i++){
+			if(getChildren().get(i) instanceof DestructibleWall){
+				getChildren().remove(i);
+			}
+		}
+	}
+	
 	public boolean isPlayerPresent(Player p){
 		
 		Node n;
@@ -95,6 +110,10 @@ public class TileContainer extends Pane implements Serializable{
 		
 	}
 	
+	public void addDestructibleWall(DestructibleWall dw){
+		
+	}
+	
 	public void removePlayer(){
 		for(int i = 0;i<getChildren().size();i++){
 			if(getChildren().get(i) instanceof Arc){
@@ -103,4 +122,7 @@ public class TileContainer extends Pane implements Serializable{
 		}
 	}
 	
+	public void addShape(Shape s){
+		getChildren().add(s);
+	}
 }

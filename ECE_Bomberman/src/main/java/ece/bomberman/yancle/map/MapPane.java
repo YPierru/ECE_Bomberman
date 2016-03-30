@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Random;
 
+import ece.bomberman.yancle.map.tiles.DestructibleWall;
 import ece.bomberman.yancle.map.tiles.EmptyTile;
 import ece.bomberman.yancle.map.tiles.Tile;
 import ece.bomberman.yancle.map.tiles.TileContainer;
@@ -31,9 +32,10 @@ public class MapPane extends AnchorPane implements Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 	private TileContainer[][] tilesContainer;
-
+	
 	public static final int TILES_NUMBER_X=19;
 	public static final int TILES_NUMBER_Y=13;
+	
 	
 	public MapPane() {
 		super();
@@ -90,14 +92,6 @@ public class MapPane extends AnchorPane implements Serializable {
 		Arc shape;
 		
 		
-		/*for(int j=0;j<TILES_NUMBER_Y;j++){
-			for(int i=0;i<TILES_NUMBER_X;i++){
-				if(tilesContainer[i][j].isShapePresent()){
-					tilesContainer[i][j].getChildren().remove(tilesContainer[i][j].getChildren().size()-1);
-				}
-			}
-		}*/
-		
 		for(Player p : listPlayers){
 			if (p.isPositionUpdated()){
 				
@@ -126,9 +120,26 @@ public class MapPane extends AnchorPane implements Serializable {
 				p.setCenterY(tc.getCenterY());
 				p.setPositionUpdated(false);
 				
-				tc.getChildren().add(shape);
+				if(!tc.isPlayerPresent(p)){
+					tc.addShape(shape);
+				}
 			}
 			
+		}
+	}
+	
+	public void displayDestructibleWalls(ArrayList<Integer[]> listCooDW){
+		TileContainer tc;
+		
+		for(int j=0;j<TILES_NUMBER_Y;j++){
+			for(int i=0;i<TILES_NUMBER_X;i++){
+				tilesContainer[i][j].removeDestructibleWallIfPresent();
+			}
+		}
+		
+		for(int i=0;i<listCooDW.size();i++){
+			System.out.println(listCooDW.get(i)[0]+" "+listCooDW.get(i)[1]);
+			tilesContainer[listCooDW.get(i)[0]][listCooDW.get(i)[1]] = new TileContainer(new DestructibleWall(),listCooDW.get(i)[0]*TileContainer.SIZE_TILE, listCooDW.get(i)[1]*TileContainer.SIZE_TILE);
 		}
 	}
 	
@@ -150,7 +161,7 @@ public class MapPane extends AnchorPane implements Serializable {
 		int possibleX=p.getArrayX();
 		int possibleY=p.getArrayY();
 		Tile tile;
-		Arc shape = p.getShape();
+		TileContainer tc;
 		
 		if(orientation == Orientation.NORTH){
 			possibleY--;
@@ -165,13 +176,19 @@ public class MapPane extends AnchorPane implements Serializable {
 			possibleX--;
 		}	
 		
-		tile = tilesContainer[possibleX][possibleY].getTile();
+		tc = tilesContainer[possibleX][possibleY];
+		tile = tc.getTile();
 		
-		if(tile instanceof EmptyTile){
-			return true;
+		if(!tc.isArcPresent()){
+			if(tile instanceof EmptyTile){
+				return true;
+			}else{
+				return false;
+			}
 		}else{
 			return false;
 		}
+	
 		
 		
 	}
