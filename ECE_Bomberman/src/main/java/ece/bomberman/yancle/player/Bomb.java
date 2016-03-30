@@ -1,10 +1,16 @@
 package ece.bomberman.yancle.player;
 
+import java.io.Serializable;
+
 import ece.bomberman.yancle.utility.Chronometer;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 
-public class Bomb extends Circle{
+public class Bomb implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private Chronometer timer;
 	private long seuil;
 	private int power;
@@ -14,27 +20,14 @@ public class Bomb extends Circle{
 	
 	public Bomb(){
 		super();
-		initialize();
 	}
 	
 	public Bomb(Chronometer tim, int pow){
 		super();
-		initialize();
 		setTimer(tim);
 		setPower(pow);
 	}
-	
-	public void initialize(){
-		setRadius(10);
-		setFill(Color.RED);
-	}
-	
-	public void moveTo(double x, double y){
-		setX(x);
-		setY(y);
-		setCenterX(x);
-		setCenterY(y);
-	}
+
 	
 	/**
 	 * @return the timer
