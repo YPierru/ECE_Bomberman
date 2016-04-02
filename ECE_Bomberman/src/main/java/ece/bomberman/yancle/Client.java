@@ -8,6 +8,7 @@ import java.util.ArrayList;
 
 import ece.bomberman.yancle.map.MapController;
 import ece.bomberman.yancle.map.MapPane;
+import ece.bomberman.yancle.player.IInteractiveShape;
 import ece.bomberman.yancle.player.InfoPlayerStage;
 import ece.bomberman.yancle.player.Orientation;
 import ece.bomberman.yancle.player.Player;
@@ -58,7 +59,6 @@ public class Client implements Runnable {
 			@Override
 			public void handle(KeyEvent event) {
 
-				
 				if(event.getCode() == KeyCode.UP) {
 					movePlayer(Orientation.NORTH);					
 					event.consume();
@@ -104,7 +104,6 @@ public class Client implements Runnable {
 		}else{
 			player.setOrientation(or);
 		}
-		player.setPositionUpdated(true);
 	}
 
 	public void sendPlayer(){
@@ -146,8 +145,15 @@ public class Client implements Runnable {
 				 
 				 new Thread(new UpdateMapPane()).start();
 				 
+				 
 
 				 if(!player.isDisplayed()){
+					 try {
+							Thread.sleep(300);
+						} catch (InterruptedException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
 					int[] xyPlayer = mapPane.getEmptyArrayXY();
 					player.setArrayX(xyPlayer[0]);
 					player.setArrayY(xyPlayer[1]);
@@ -169,6 +175,7 @@ public class Client implements Runnable {
 
 		@Override
 		protected Void call() throws Exception {
+			
 			Platform.runLater(new Runnable() {
 				
 				@Override
@@ -190,8 +197,8 @@ public class Client implements Runnable {
 				
 				@Override
 				public void run() {
-					mapPane.displayCharacters(mapController.getListPlayers());
 					mapPane.displayDestructibleWalls(mapController.getListDestructibleWall());
+					mapPane.displayCharacters(mapController.getListPlayers());
 				}
 			});
 			return null;

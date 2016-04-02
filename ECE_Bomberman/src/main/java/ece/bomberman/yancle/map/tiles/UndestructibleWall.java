@@ -21,8 +21,8 @@ public class UndestructibleWall extends Tile {
 	
 	@Override
 	public void initialize() {
-		setFill(Color.FUCHSIA);
-		setStroke(Color.WHITE);
+		setFill(Color.BLACK);
+		setStroke(Color.BLACK);
 	}
 	
 	@Override

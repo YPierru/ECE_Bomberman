@@ -23,6 +23,5 @@ public abstract class Tile extends Rectangle implements Serializable{
 	}
 	
 	public abstract void initialize();
-	//public abstract String getNameTile();
 
 }

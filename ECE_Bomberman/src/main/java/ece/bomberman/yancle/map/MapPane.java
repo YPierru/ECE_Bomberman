@@ -61,12 +61,7 @@ public class MapPane extends AnchorPane implements Serializable {
 				if(i==0 || i==TILES_NUMBER_Y-1 || (i%2!=1 && j%2==0)) {
 					getChildren().add(new TileContainer(new UndestructibleWall(),x+(TileContainer.SIZE_TILE*j), y));
 				}else{
-					/*if(rand.nextInt(11)>5){
-						getChildren().add(new TileContainer(new DestructibleWall(),x+(TileContainer.SIZE_TILE*j), y));
-						listTC.clear();
-					}else{*/
 						getChildren().add(new TileContainer(new EmptyTile(),x+(TileContainer.SIZE_TILE*j), y));
-					//}
 				}
 			}
 			
@@ -89,45 +84,52 @@ public class MapPane extends AnchorPane implements Serializable {
 		return tilesContainer;
 	}
 	
+	public void refresh(){
+		getChildren().remove(0, getChildren().size());
+		
+		
+		for(int j=0;j<TILES_NUMBER_Y;j++){
+			for(int i=0;i<TILES_NUMBER_X;i++){
+				getChildren().add(tilesContainer[i][j]);
+			}
+		}
+	}
+	
 	public void displayCharacters(ArrayList<Player> listPlayers){
 		TileContainer tc;
 		Arc shape;
 		
-		
-		for(Player p : listPlayers){
-			if (p.isPositionUpdated()){
-				
-				for(int j=0;j<TILES_NUMBER_Y;j++){
-					for(int i=0;i<TILES_NUMBER_X;i++){
-						if(tilesContainer[i][j].isInteractiveShapePresent(p)){
-							tilesContainer[i][j].removePlayer();
-						}
-					}
-				}
-				
-				shape = (Arc) p.getShape();
-				tc = tilesContainer[p.getArrayX()][p.getArrayY()];
-	
-				//Animation
-				Timeline timeline = new Timeline();
-				KeyValue kv = new KeyValue(shape.centerXProperty(), tc.getCenterX());
-				KeyFrame kf = new KeyFrame(Duration.millis(p.getSpeed()), kv);
-				KeyValue kv2 = new KeyValue(shape.centerYProperty(), tc.getCenterY());
-				KeyFrame kf2 = new KeyFrame(Duration.millis(p.getSpeed()), kv2);
-				timeline.getKeyFrames().add(kf);
-				timeline.getKeyFrames().add(kf2);
-				timeline.play();
-				
-				p.setCenterX(tc.getCenterX());
-				p.setCenterY(tc.getCenterY());
-				p.setPositionUpdated(false);
-				
-				if(!tc.isInteractiveShapePresent(p)){
-					tc.addShape(shape);
-				}
+		for(int j=0;j<TILES_NUMBER_Y;j++){
+			for(int i=0;i<TILES_NUMBER_X;i++){
+				tilesContainer[i][j].removePlayer();
 			}
-			
 		}
+		for(Player p : listPlayers){
+			//shape = (Arc) p.getShape();
+			tc = tilesContainer[p.getArrayX()][p.getArrayY()];
+
+			//Animation
+			/*Timeline timeline = new Timeline();
+			KeyValue kv = new KeyValue(shape.centerXProperty(), tc.getCenterX());
+			KeyFrame kf = new KeyFrame(Duration.millis(p.getSpeed()), kv);
+			KeyValue kv2 = new KeyValue(shape.centerYProperty(), tc.getCenterY());
+			KeyFrame kf2 = new KeyFrame(Duration.millis(p.getSpeed()), kv2);
+			timeline.getKeyFrames().add(kf);
+			timeline.getKeyFrames().add(kf2);
+			timeline.play();*/
+			
+			p.setCenterX(tc.getCenterX());
+			p.setCenterY(tc.getCenterY());
+			//p.setPositionUpdated(false);
+
+			shape = (Arc) p.getShape();
+
+			if(!tc.isInteractiveShapePresent(p)){
+				tc.addShape(shape);
+			}
+		}
+		refresh();
+		
 	}
 	
 	public void displayDestructibleWalls(ArrayList<Integer[]> listCooDW){
@@ -135,17 +137,17 @@ public class MapPane extends AnchorPane implements Serializable {
 
 		for(int j=0;j<TILES_NUMBER_Y;j++){
 			for(int i=0;i<TILES_NUMBER_X;i++){
-				tilesContainer[i][j].removeDestructibleWallIfPresent();
+				tilesContainer[i][j].replaceDestructibleWallWithEmpty();
 			}
 		}
 		
 		for(int i=0;i<listCooDW.size();i++){
 			x=listCooDW.get(i)[0];
 			y=listCooDW.get(i)[1];
-			getChildren().remove(tilesContainer[x][y]);
-			tilesContainer[x][y] = new TileContainer(new DestructibleWall(),x*TileContainer.SIZE_TILE, y*TileContainer.SIZE_TILE);
-			getChildren().add(tilesContainer[x][y]);
+			
+			tilesContainer[x][y].replaceEmptyWithDestructibleWall();
 		}
+		refresh();
 		
 	}
 	
@@ -207,6 +209,7 @@ public class MapPane extends AnchorPane implements Serializable {
 		for(int j=0;j<TILES_NUMBER_Y;j++){
 			for(int i=0;i<TILES_NUMBER_X;i++){
 				if(tilesContainer[i][j].getTile() instanceof EmptyTile && !tilesContainer[i][j].isArcPresent()){
+					//System.out.println(tilesContainer[i][j]);
 					xy[0]=i;
 					xy[1]=j;
 					coordinates.add(xy);

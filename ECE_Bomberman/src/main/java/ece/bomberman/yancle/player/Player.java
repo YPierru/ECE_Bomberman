@@ -126,8 +126,9 @@ public class Player implements Serializable, IInteractiveShape{
 		setOrientation(or);
 	}
 	
-	public void setOrientation(Orientation or){		
+	public void setOrientation(Orientation or){
 		orientation=or;
+		positionUpdated=true;
 	}
 	
 	/**
@@ -258,6 +259,7 @@ public class Player implements Serializable, IInteractiveShape{
 	@Override
 	public void setCenterX(int centerX) {
 		this.centerX = centerX;
+		positionUpdated=false;
 	}
 	@Override
 	public int getCenterY() {
@@ -266,6 +268,7 @@ public class Player implements Serializable, IInteractiveShape{
 	@Override
 	public void setCenterY(int centerY) {
 		this.centerY = centerY;
+		positionUpdated=false;
 	}
 
 	public int getSpeed() {

@@ -49,7 +49,7 @@ public class InputIPAndPortController implements Initializable{
 	@FXML
 	public void handleClick(){
 		
-		Client c=new Client(ip.getText(), Integer.parseInt(port.getText()),main,nickname.getText(),color.getValue());
+		Client c=new Client(ip.getText(), Integer.parseInt(port.getText()),main,color.getValue(),color.getValue());
 		new Thread(c).start();
 		
 	}

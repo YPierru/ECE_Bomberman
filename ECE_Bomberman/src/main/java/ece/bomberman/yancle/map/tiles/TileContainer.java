@@ -3,7 +3,6 @@ package ece.bomberman.yancle.map.tiles;
 import java.io.Serializable;
 
 import ece.bomberman.yancle.player.IInteractiveShape;
-import ece.bomberman.yancle.player.Player;
 import javafx.scene.Node;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Arc;
@@ -88,31 +87,37 @@ public class TileContainer extends Pane implements Serializable{
 		return false;
 	}
 	
-	public void removeDestructibleWallIfPresent(){
+	public void replaceDestructibleWallWithEmpty(){
 		for(int i = 0;i<getChildren().size();i++){
 			if(getChildren().get(i) instanceof DestructibleWall){
 				getChildren().remove(i);
+				tile=new EmptyTile();
+				getChildren().add(tile);
+				moveTile();
+			}
+		}
+	}
+	
+	public void replaceEmptyWithDestructibleWall(){
+		for(int i = 0;i<getChildren().size();i++){
+			if(getChildren().get(i) instanceof EmptyTile){
+				getChildren().remove(i);
+				tile=new DestructibleWall();
+				getChildren().add(tile);
+				moveTile();
 			}
 		}
 	}
 	
 	public boolean isInteractiveShapePresent(IInteractiveShape p){
-		
 		Node n;
-		
 		for(int i = 0;i<getChildren().size();i++){
 			n=getChildren().get(i);
 			if(n instanceof Arc && getCenterX()==p.getCenterX() && getCenterY()==p.getCenterY()){
 				return true;
 			}
 		}
-		
 		return false;
-		
-	}
-	
-	public void addDestructibleWall(DestructibleWall dw){
-		
 	}
 	
 	public void removePlayer(){
@@ -126,4 +131,5 @@ public class TileContainer extends Pane implements Serializable{
 	public void addShape(Shape s){
 		getChildren().add(s);
 	}
+	
 }
