@@ -132,6 +132,20 @@ public class MapPane extends AnchorPane implements Serializable {
 		
 	}
 	
+	public void displayCharactersImage(ArrayList<Player> listPlayers){
+		TileContainer tc;
+		for(Player p : listPlayers){
+			tc = tilesContainer[p.getArrayX()][p.getArrayY()];
+			
+			p.setCenterX(tc.getCenterX());
+			p.setCenterY(tc.getCenterY());
+
+			tc.getChildren().add(p.getAvatar());
+
+		}
+		refresh();
+	}
+	
 	public void displayDestructibleWalls(ArrayList<Integer[]> listCooDW){
 		int x,y;
 
@@ -197,8 +211,6 @@ public class MapPane extends AnchorPane implements Serializable {
 			return false;
 		}
 	
-		
-		
 	}
 	
 	

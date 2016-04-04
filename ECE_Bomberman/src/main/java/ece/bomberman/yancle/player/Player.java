@@ -1,9 +1,18 @@
 package ece.bomberman.yancle.player;
 
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.HashSet;
 
+import javax.imageio.ImageIO;
+
+import ece.bomberman.yancle.map.tiles.TileContainer;
 import ece.bomberman.yancle.utility.Chronometer;
+import javafx.embed.swing.SwingFXUtils;
+import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Arc;
 import javafx.scene.shape.ArcType;
@@ -27,7 +36,7 @@ public class Player implements Serializable, IInteractiveShape{
 	private int centerY;
 	private Orientation orientation = Orientation.EAST;
 	private String name;
-	private String color;
+	transient BufferedImage avatarBuff;
 	private boolean isDisplayed;
 	private boolean positionUpdated;
 
@@ -37,7 +46,7 @@ public class Player implements Serializable, IInteractiveShape{
 	public static final ArcType ARC_TYPE= ArcType.ROUND;
 	
 	
-	public Player(String c, String n){
+	public Player(BufferedImage a, String n){
 		isDisplayed=false;
 		positionUpdated=true;
 		life = 5;
@@ -45,7 +54,7 @@ public class Player implements Serializable, IInteractiveShape{
 		bombSet = new HashSet<Bomb>();
 		timer = 4;
 		power = 2;
-		color=c;
+		avatarBuff=a;
 		name=n;
 	}
 	
@@ -55,13 +64,13 @@ public class Player implements Serializable, IInteractiveShape{
         shape.setRadiusX(RADIUS);
         shape.setRadiusY(RADIUS);
         shape.setLength(LENGTH);
-		if(color.equals("Blue")){
+		//if(color.equals("Blue")){
 	        shape.setFill(Color.BLUE);
-		}else if(color.equals("Red")){
+		/*}else if(color.equals("Red")){
 	        shape.setFill(Color.RED);
 		}else if(color.equals("Green")){
 	        shape.setFill(Color.GREEN);		
-		}
+		}*/
         shape.setType(ARC_TYPE);
         shape.setCenterX(centerX);
         shape.setCenterY(centerY);
@@ -80,6 +89,24 @@ public class Player implements Serializable, IInteractiveShape{
 		}
         
         return shape;
+	}
+	
+	private void writeObject(ObjectOutputStream out) throws IOException {
+        out.defaultWriteObject();
+        ImageIO.write(avatarBuff, "png", out); // png is lossless
+        
+    }
+
+    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
+        in.defaultReadObject();
+        avatarBuff = ImageIO.read(in);
+    }
+	
+	public ImageView getAvatar(){
+		ImageView iv = new ImageView(SwingFXUtils.toFXImage(avatarBuff, null));
+		iv.setX(arrayX*TileContainer.SIZE_TILE);
+		iv.setY(arrayY*TileContainer.SIZE_TILE);
+		return iv;
 	}
 
 	public Boolean poserBombe(){

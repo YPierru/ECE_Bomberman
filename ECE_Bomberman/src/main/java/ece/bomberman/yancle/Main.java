@@ -38,7 +38,7 @@ public class Main extends Application {
 		initRootLayout();
 		displayStartFrame();
 		
-		if(!QUICK){
+		if(QUICK){
 			sfc.clickCreate();
 			ipc.clickStart();
 			sfc.clickJoin();
