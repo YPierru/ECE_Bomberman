@@ -1,14 +1,13 @@
 package ece.bomberman.yancle;
 
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
-import java.util.ArrayList;
 
 import ece.bomberman.yancle.map.MapController;
 import ece.bomberman.yancle.map.MapPane;
-import ece.bomberman.yancle.player.IInteractiveShape;
 import ece.bomberman.yancle.player.InfoPlayerStage;
 import ece.bomberman.yancle.player.Orientation;
 import ece.bomberman.yancle.player.Player;
@@ -32,7 +31,7 @@ public class Client implements Runnable {
 	private Scene scene;
 	private InfoPlayerStage frameInfo;
 	
-	public Client(String i, int p, Main m, String pseudo, String color) {
+	public Client(String i, int p, Main m, String pseudo, BufferedImage avatar) {
 		ip = i;
 		port = p;
 		main = m;
@@ -50,7 +49,7 @@ public class Client implements Runnable {
 		mapPane = new MapPane();
 		main.displayMap(mapPane);
 		
-		player = new Player(color, pseudo);
+		player = new Player(avatar, pseudo);
 		
 		scene=main.getScene();
 		
@@ -207,9 +206,10 @@ public class Client implements Runnable {
 				
 				@Override
 				public void run() {
-
-					mapPane.displayInteractiveObject(mapController.getListPlayers());
-			}
+					mapPane.displayDestructibleWalls(mapController.getListDestructibleWall());
+					//mapPane.displayInteractiveObject(mapController.getListPlayers());
+					mapPane.displayCharactersImage(mapController.getListPlayers());
+				}
 			});
 			return null;
 		}
