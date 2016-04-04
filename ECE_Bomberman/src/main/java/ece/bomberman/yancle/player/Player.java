@@ -86,16 +86,16 @@ public class Player implements Serializable, IInteractiveShape{
 		Boolean rtr = false;
 		if(bombSet.size()<numberMaxOfBombe){
 			if(orientation.equals("EAST")){
-				bombSet.add(new Bomb(new Chronometer(System.currentTimeMillis()/1000),power, arrayX+1, arrayY));
+				bombSet.add(new Bomb(new Chronometer(System.currentTimeMillis()/1000),power, arrayX+1, arrayY, timer));
 			}
 			else if(orientation.equals("WEST")){
-				bombSet.add(new Bomb(new Chronometer(System.currentTimeMillis()/1000),power, arrayX-1, arrayY));
+				bombSet.add(new Bomb(new Chronometer(System.currentTimeMillis()/1000),power, arrayX-1, arrayY, timer));
 			}
 			else if(orientation.equals("NORTH")){
-				bombSet.add(new Bomb(new Chronometer(System.currentTimeMillis()/1000),power, arrayX, arrayY+1));
+				bombSet.add(new Bomb(new Chronometer(System.currentTimeMillis()/1000),power, arrayX, arrayY+1, timer));
 			}
 			else{
-				bombSet.add(new Bomb(new Chronometer(System.currentTimeMillis()/1000),power, arrayX, arrayY-1));
+				bombSet.add(new Bomb(new Chronometer(System.currentTimeMillis()/1000),power, arrayX, arrayY-1, timer));
 			}
 			rtr = true;
 		}
