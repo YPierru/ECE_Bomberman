@@ -25,12 +25,13 @@ public class Bomb implements Serializable, IInteractiveShape{
 		super();
 	}
 	
-	public Bomb(Chronometer tim, int pow, int arrayX, int arrayY ){
+	public Bomb(Chronometer tim, int pow, int arrayX, int arrayY, long seuil ){
 		super();
 		setArrayX(arrayX);
 		setArrayY(arrayY);
 		setTimer(tim);
 		setPower(pow);
+		setSeuil(seuil);
 	}
 
 	
@@ -107,7 +108,6 @@ public class Bomb implements Serializable, IInteractiveShape{
 		this.arrayY = y;
 	}
 
-	
 	@Override
 	public Shape getShape() {
 		Circle shape = new Circle();
@@ -117,7 +117,6 @@ public class Bomb implements Serializable, IInteractiveShape{
 		shape.setFill(Color.GREENYELLOW);
 		return shape;
 	}
-
 
 	@Override
 	public int getCenterX() {

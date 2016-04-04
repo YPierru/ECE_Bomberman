@@ -95,7 +95,7 @@ public class MapPane extends AnchorPane implements Serializable {
 		}
 	}
 	
-	public void displayCharacters(ArrayList<Player> listPlayers){
+	public void displayInteractiveObject(ArrayList<Player> listPlayers){
 		TileContainer tc;
 		Arc shape;
 		

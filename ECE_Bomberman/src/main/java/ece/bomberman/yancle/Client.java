@@ -1,6 +1,5 @@
 package ece.bomberman.yancle;
 
-import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -9,6 +8,7 @@ import java.util.ArrayList;
 
 import ece.bomberman.yancle.map.MapController;
 import ece.bomberman.yancle.map.MapPane;
+import ece.bomberman.yancle.player.IInteractiveShape;
 import ece.bomberman.yancle.player.InfoPlayerStage;
 import ece.bomberman.yancle.player.Orientation;
 import ece.bomberman.yancle.player.Player;
@@ -32,7 +32,7 @@ public class Client implements Runnable {
 	private Scene scene;
 	private InfoPlayerStage frameInfo;
 	
-	public Client(String i, int p, Main m, String pseudo, BufferedImage avatar) {
+	public Client(String i, int p, Main m, String pseudo, String color) {
 		ip = i;
 		port = p;
 		main = m;
@@ -50,7 +50,7 @@ public class Client implements Runnable {
 		mapPane = new MapPane();
 		main.displayMap(mapPane);
 		
-		player = new Player(avatar, pseudo);
+		player = new Player(color, pseudo);
 		
 		scene=main.getScene();
 		
@@ -76,7 +76,11 @@ public class Client implements Runnable {
 				    event.consume();
 				    sendPlayer();
 				}else if(event.getCode() == KeyCode.SPACE){
-					ArrayList<Integer[]> list = mapController.getListDestructibleWall();
+					putBomb();
+					event.consume();
+					sendPlayer();
+					
+				/*	ArrayList<Integer[]> list = mapController.getListDestructibleWall();
 					for(int i=0;i<list.size();i++){
 						if(list.get(i)[0]==3 && list.get(i)[1]==1){
 							list.remove(list.get(i));
@@ -89,7 +93,7 @@ public class Client implements Runnable {
 					} catch (IOException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
-					}
+					}*/
 				}
 				
 				//sendPlayer();
@@ -103,6 +107,12 @@ public class Client implements Runnable {
 			player.deplacement(or);
 		}else{
 			player.setOrientation(or);
+		}
+	}
+	
+	public void putBomb(){
+		if(mapPane.isMovePossible(player, player.getOrientation())){
+			player.poserBombe();
 		}
 	}
 
@@ -197,10 +207,9 @@ public class Client implements Runnable {
 				
 				@Override
 				public void run() {
-					mapPane.displayDestructibleWalls(mapController.getListDestructibleWall());
-					//mapPane.displayCharacters(mapController.getListPlayers());
-					mapPane.displayCharactersImage(mapController.getListPlayers());
-				}
+
+					mapPane.displayInteractiveObject(mapController.getListPlayers());
+			}
 			});
 			return null;
 		}
