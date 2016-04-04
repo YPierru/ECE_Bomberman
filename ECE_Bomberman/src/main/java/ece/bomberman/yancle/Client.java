@@ -76,7 +76,11 @@ public class Client implements Runnable {
 				    event.consume();
 				    sendPlayer();
 				}else if(event.getCode() == KeyCode.SPACE){
-					ArrayList<Integer[]> list = mapController.getListDestructibleWall();
+					putBomb();
+					event.consume();
+					sendPlayer();
+					
+				/*	ArrayList<Integer[]> list = mapController.getListDestructibleWall();
 					for(int i=0;i<list.size();i++){
 						if(list.get(i)[0]==3 && list.get(i)[1]==1){
 							list.remove(list.get(i));
@@ -89,7 +93,7 @@ public class Client implements Runnable {
 					} catch (IOException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
-					}
+					}*/
 				}
 				
 				//sendPlayer();
@@ -103,6 +107,12 @@ public class Client implements Runnable {
 			player.deplacement(or);
 		}else{
 			player.setOrientation(or);
+		}
+	}
+	
+	public void putBomb(){
+		if(mapPane.isMovePossible(player, player.getOrientation())){
+			player.poserBombe();
 		}
 	}
 
@@ -198,7 +208,7 @@ public class Client implements Runnable {
 				@Override
 				public void run() {
 					mapPane.displayDestructibleWalls(mapController.getListDestructibleWall());
-					mapPane.displayCharacters(mapController.getListPlayers());
+					mapPane.displayInteractiveObject(mapController.getListPlayers());
 				}
 			});
 			return null;
