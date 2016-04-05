@@ -1,8 +1,16 @@
 package ece.bomberman.yancle.player;
 
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
+import javax.imageio.ImageIO;
+
+import ece.bomberman.yancle.map.tiles.TileContainer;
 import ece.bomberman.yancle.utility.Chronometer;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Shape;
@@ -19,6 +27,7 @@ public class Bomb implements Serializable, IInteractiveShape{
 	private int arrayY;
 	private int centerX;
 	private int centerY;
+	transient BufferedImage bombBuff;
 	
 	
 	public Bomb(){
@@ -27,12 +36,29 @@ public class Bomb implements Serializable, IInteractiveShape{
 	
 	public Bomb(Chronometer tim, int pow, int arrayX, int arrayY, long seuil ){
 		super();
+		try {
+			bombBuff=ImageIO.read(Bomb.class.getResourceAsStream("bomb.png"));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		setArrayX(arrayX);
 		setArrayY(arrayY);
 		setTimer(tim);
 		setPower(pow);
 		setSeuil(seuil);
 	}
+	
+	private void writeObject(ObjectOutputStream out) throws IOException {
+        out.defaultWriteObject();
+        ImageIO.write(bombBuff, "png", out); // png is lossless
+        
+    }
+
+    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
+        in.defaultReadObject();
+        bombBuff = ImageIO.read(in);
+    }
 
 	
 	/**
@@ -140,6 +166,13 @@ public class Bomb implements Serializable, IInteractiveShape{
 	public void setCenterY(int Y) {
 		// TODO Auto-generated method stub
 		centerY = Y;
+	}
+	
+	public BombImage getBombImage(){
+		BombImage bi = new BombImage(SwingFXUtils.toFXImage(bombBuff, null));
+		bi.setX(arrayX*TileContainer.SIZE_TILE);
+		bi.setY(arrayY*TileContainer.SIZE_TILE);
+		return bi;
 	}
 
 }

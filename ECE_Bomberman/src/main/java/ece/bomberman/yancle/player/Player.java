@@ -113,13 +113,13 @@ public class Player implements Serializable, IInteractiveShape{
 	public boolean poserBombe(){
 		boolean rtr = false;
 		if(bombSet.size()<numberMaxOfBombe){
-			if(orientation.equals("EAST")){
+			if(orientation==Orientation.EAST){
 				bombSet.add(new Bomb(new Chronometer(System.currentTimeMillis()/1000),power, arrayX+1, arrayY, timer));
 			}
-			else if(orientation.equals("WEST")){
+			else if(orientation==Orientation.WEST){
 				bombSet.add(new Bomb(new Chronometer(System.currentTimeMillis()/1000),power, arrayX-1, arrayY, timer));
 			}
-			else if(orientation.equals("NORTH")){
+			else if(orientation==Orientation.NORTH){
 				bombSet.add(new Bomb(new Chronometer(System.currentTimeMillis()/1000),power, arrayX, arrayY+1, timer));
 			}
 			else{

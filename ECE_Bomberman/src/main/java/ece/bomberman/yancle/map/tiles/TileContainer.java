@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.Serializable;
 
 import ece.bomberman.yancle.player.Avatar;
+import ece.bomberman.yancle.player.BombImage;
 import ece.bomberman.yancle.player.IInteractiveShape;
 import javafx.scene.Node;
 import javafx.scene.layout.Pane;
@@ -133,8 +134,22 @@ public class TileContainer extends Pane implements Serializable{
 		return false;
 	}
 	
+	public boolean isBombPresent(){
+		for(Node n : getChildren()){
+			if(n instanceof BombImage){
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	
 	public void addAvatar(Avatar a){
 		getChildren().add(a);
+	}
+	
+	public void addBomb(BombImage b){
+		getChildren().add(b);
 	}
 	
 	public void removePlayer(){
@@ -148,6 +163,14 @@ public class TileContainer extends Pane implements Serializable{
 	public void removeAvatar(){
 		for(int i = 0;i<getChildren().size();i++){
 			if(getChildren().get(i) instanceof Avatar){
+				getChildren().remove(i);
+			}
+		}
+	}
+	
+	public void removeBomb(){
+		for(int i = 0;i<getChildren().size();i++){
+			if(getChildren().get(i) instanceof BombImage){
 				getChildren().remove(i);
 			}
 		}

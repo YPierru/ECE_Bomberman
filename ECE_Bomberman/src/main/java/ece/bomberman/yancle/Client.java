@@ -61,41 +61,21 @@ public class Client implements Runnable {
 				if(event.getCode() == KeyCode.UP) {
 					movePlayer(Orientation.NORTH);					
 					event.consume();
-					sendPlayer();
 				}else if(event.getCode() == KeyCode.DOWN) {
 					movePlayer(Orientation.SOUTH);
 				    event.consume();
-				    sendPlayer();
 				}else if(event.getCode() == KeyCode.RIGHT){
 					movePlayer(Orientation.EAST);
 				    event.consume();
-				    sendPlayer();
 				}else if(event.getCode() == KeyCode.LEFT){
 					movePlayer(Orientation.WEST);
 				    event.consume();
-				    sendPlayer();
 				}else if(event.getCode() == KeyCode.SPACE){
 					putBomb();
 					event.consume();
-					sendPlayer();
-					
-				/*	ArrayList<Integer[]> list = mapController.getListDestructibleWall();
-					for(int i=0;i<list.size();i++){
-						if(list.get(i)[0]==3 && list.get(i)[1]==1){
-							list.remove(list.get(i));
-						}
-					}
-					try {
-						writer.reset();
-						writer.writeObject(list);
-						writer.flush();
-					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}*/
 				}
 				
-				//sendPlayer();
+				sendPlayer();
 			}
 		});
 

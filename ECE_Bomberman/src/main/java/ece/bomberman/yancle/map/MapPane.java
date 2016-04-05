@@ -9,6 +9,7 @@ import ece.bomberman.yancle.map.tiles.EmptyTile;
 import ece.bomberman.yancle.map.tiles.Tile;
 import ece.bomberman.yancle.map.tiles.TileContainer;
 import ece.bomberman.yancle.map.tiles.UndestructibleWall;
+import ece.bomberman.yancle.player.Bomb;
 import ece.bomberman.yancle.player.IInteractiveShape;
 import ece.bomberman.yancle.player.Orientation;
 import ece.bomberman.yancle.player.Player;
@@ -139,14 +140,18 @@ public class MapPane extends AnchorPane implements Serializable {
 		for(int j=0;j<TILES_NUMBER_Y;j++){
 			for(int i=0;i<TILES_NUMBER_X;i++){
 				tilesContainer[i][j].removeAvatar();
+				tilesContainer[i][j].removeBomb();
 			}
 		}
 		
 		for(Player p : listPlayers){
 			tc = tilesContainer[p.getArrayX()][p.getArrayY()];
 			
-			p.setCenterX(tc.getCenterX());
-			p.setCenterY(tc.getCenterY());
+			for(Bomb b : p.getBombSet()){
+				if(!tc.isBombPresent()){
+					tc.addBomb(b.getBombImage());
+				}
+			}
 
 			if(!tc.isAvatarPresent()){
 				tc.addAvatar(p.getAvatar());
