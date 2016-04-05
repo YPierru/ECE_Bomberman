@@ -1,7 +1,9 @@
 package ece.bomberman.yancle.map.tiles;
 
+import java.io.IOException;
 import java.io.Serializable;
 
+import ece.bomberman.yancle.player.Avatar;
 import ece.bomberman.yancle.player.IInteractiveShape;
 import javafx.scene.Node;
 import javafx.scene.layout.Pane;
@@ -20,6 +22,7 @@ public class TileContainer extends Pane implements Serializable{
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	//private Tile tile;
 	private Tile tile;
 	private int x;
 	private int y;
@@ -69,15 +72,6 @@ public class TileContainer extends Pane implements Serializable{
 		return tile;
 	}
 	
-	public boolean isArcPresent(){
-		for(Node n : getChildren()){
-			if(n instanceof Arc){
-				return true;
-			}
-		}
-		return false;
-	}
-	
 	public boolean isDestructibleWallPresent(){
 		for(Node n : getChildren()){
 			if(n instanceof DestructibleWall){
@@ -91,7 +85,12 @@ public class TileContainer extends Pane implements Serializable{
 		for(int i = 0;i<getChildren().size();i++){
 			if(getChildren().get(i) instanceof DestructibleWall){
 				getChildren().remove(i);
-				tile=new EmptyTile();
+				try {
+					tile=new EmptyTile();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				getChildren().add(tile);
 				moveTile();
 			}
@@ -102,7 +101,12 @@ public class TileContainer extends Pane implements Serializable{
 		for(int i = 0;i<getChildren().size();i++){
 			if(getChildren().get(i) instanceof EmptyTile){
 				getChildren().remove(i);
-				tile=new DestructibleWall();
+				try {
+					tile=new DestructibleWall();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				getChildren().add(tile);
 				moveTile();
 			}
@@ -120,9 +124,30 @@ public class TileContainer extends Pane implements Serializable{
 		return false;
 	}
 	
+	public boolean isAvatarPresent(){
+		for(Node n : getChildren()){
+			if(n instanceof Avatar){
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public void addAvatar(Avatar a){
+		getChildren().add(a);
+	}
+	
 	public void removePlayer(){
 		for(int i = 0;i<getChildren().size();i++){
 			if(getChildren().get(i) instanceof Arc){
+				getChildren().remove(i);
+			}
+		}
+	}
+	
+	public void removeAvatar(){
+		for(int i = 0;i<getChildren().size();i++){
+			if(getChildren().get(i) instanceof Avatar){
 				getChildren().remove(i);
 			}
 		}

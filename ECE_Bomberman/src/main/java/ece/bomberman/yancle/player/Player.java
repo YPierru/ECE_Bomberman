@@ -9,6 +9,7 @@ import java.util.HashSet;
 
 import javax.imageio.ImageIO;
 
+import ece.bomberman.yancle.map.tiles.ImgUtils;
 import ece.bomberman.yancle.map.tiles.TileContainer;
 import ece.bomberman.yancle.utility.Chronometer;
 import javafx.embed.swing.SwingFXUtils;
@@ -102,15 +103,15 @@ public class Player implements Serializable, IInteractiveShape{
         avatarBuff = ImageIO.read(in);
     }
 	
-	public ImageView getAvatar(){
-		ImageView iv = new ImageView(SwingFXUtils.toFXImage(avatarBuff, null));
-		iv.setX(arrayX*TileContainer.SIZE_TILE);
-		iv.setY(arrayY*TileContainer.SIZE_TILE);
-		return iv;
+	public Avatar getAvatar(){
+		Avatar av = new Avatar(SwingFXUtils.toFXImage(avatarBuff, null));
+		av.setX(arrayX*TileContainer.SIZE_TILE);
+		av.setY(arrayY*TileContainer.SIZE_TILE);
+		return av;
 	}
 
-	public Boolean poserBombe(){
-		Boolean rtr = false;
+	public boolean poserBombe(){
+		boolean rtr = false;
 		if(bombSet.size()<numberMaxOfBombe){
 			if(orientation.equals("EAST")){
 				bombSet.add(new Bomb(new Chronometer(System.currentTimeMillis()/1000),power, arrayX+1, arrayY, timer));
