@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashSet;
 
 import javax.imageio.ImageIO;
@@ -29,7 +30,7 @@ public class Player implements Serializable, IInteractiveShape{
 	private int power;
 	private int numberMaxOfBombe;
 	private int speed=300;//ms
-	private HashSet<Bomb> bombSet;
+	private ArrayList<Bomb> bombSet;
 	private int arrayX;
 	private int arrayY;
 	private int centerX;
@@ -51,7 +52,7 @@ public class Player implements Serializable, IInteractiveShape{
 		positionUpdated=true;
 		life = 5;
 		numberMaxOfBombe = 3;
-		bombSet = new HashSet<Bomb>();
+		bombSet = new ArrayList<Bomb>();
 		timer = 4;
 		power = 2;
 		avatarBuff=a;
@@ -109,31 +110,42 @@ public class Player implements Serializable, IInteractiveShape{
 		return iv;
 	}
 
-	public Boolean poserBombe(){
-		Boolean rtr = false;
+	public boolean poserBombe(){
+		boolean rtr = false;
 		if(bombSet.size()<numberMaxOfBombe){
+			Bomb bomb = null;
 			if(orientation.equals("EAST")){
-				bombSet.add(new Bomb(new Chronometer(System.currentTimeMillis()/1000),power, arrayX+1, arrayY, timer));
+				bomb = new Bomb(new Chronometer(System.currentTimeMillis()/1000),power, arrayX+1, arrayY, timer);
 			}
 			else if(orientation.equals("WEST")){
-				bombSet.add(new Bomb(new Chronometer(System.currentTimeMillis()/1000),power, arrayX-1, arrayY, timer));
+				bomb = new Bomb(new Chronometer(System.currentTimeMillis()/1000),power, arrayX-1, arrayY, timer);
 			}
 			else if(orientation.equals("NORTH")){
-				bombSet.add(new Bomb(new Chronometer(System.currentTimeMillis()/1000),power, arrayX, arrayY+1, timer));
+				bomb = new Bomb(new Chronometer(System.currentTimeMillis()/1000),power, arrayX, arrayY+1, timer);
 			}
 			else{
-				bombSet.add(new Bomb(new Chronometer(System.currentTimeMillis()/1000),power, arrayX, arrayY-1, timer));
+				bomb = new Bomb(new Chronometer(System.currentTimeMillis()/1000),power, arrayX, arrayY-1, timer);
 			}
+			bombSet.add(bomb);
+			Bomb temp = bomb;
+			new Thread(new Runnable() {
+				@Override
+				public void run() {
+					// TODO Auto-generated method stub
+					bombExplosion(temp);
+				}
+			}).start();
 			rtr = true;
 		}
 		return rtr;
 	}
 	
-	public void bombExplosion(){
-		for(Bomb bomb : bombSet){
-			if(bomb.getTimer().compare(bomb.getSeuil())){
-				bombSet.remove(bomb);
-			}
+	public void bombExplosion(Bomb bomb){
+		try {
+			Thread.sleep(timer);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 	
@@ -217,14 +229,14 @@ public class Player implements Serializable, IInteractiveShape{
 	/**
 	 * @return the bombSet
 	 */
-	public HashSet<Bomb> getBombSet() {
+	public ArrayList<Bomb> getBombSet() {
 		return bombSet;
 	}
 
 	/**
 	 * @param bombSet the bombSet to set
 	 */
-	public void setBombSet(HashSet<Bomb> bombSet) {
+	public void setBombSet(ArrayList<Bomb> bombSet) {
 		this.bombSet = bombSet;
 	}
 
