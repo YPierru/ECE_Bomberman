@@ -4,21 +4,15 @@ import java.io.IOException;
 import java.io.Serializable;
 
 import ece.bomberman.yancle.map.MapPane;
-import ece.bomberman.yancle.map.tiles.EmptyTile;
-import ece.bomberman.yancle.map.tiles.Tile;
 import ece.bomberman.yancle.map.tiles.TileContainer;
 import ece.bomberman.yancle.view.InputIPAndPortController;
 import ece.bomberman.yancle.view.InputPortController;
 import ece.bomberman.yancle.view.StartFrameController;
 import javafx.application.Application;
-import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
-import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 
 public class Main extends Application {

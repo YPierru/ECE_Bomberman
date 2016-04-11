@@ -10,6 +10,7 @@ import java.util.HashSet;
 
 import javax.imageio.ImageIO;
 
+import ece.bomberman.yancle.map.tiles.ImgUtils;
 import ece.bomberman.yancle.map.tiles.TileContainer;
 import ece.bomberman.yancle.utility.Chronometer;
 import javafx.embed.swing.SwingFXUtils;
@@ -103,24 +104,24 @@ public class Player implements Serializable, IInteractiveShape{
         avatarBuff = ImageIO.read(in);
     }
 	
-	public ImageView getAvatar(){
-		ImageView iv = new ImageView(SwingFXUtils.toFXImage(avatarBuff, null));
-		iv.setX(arrayX*TileContainer.SIZE_TILE);
-		iv.setY(arrayY*TileContainer.SIZE_TILE);
-		return iv;
+	public Avatar getAvatar(){
+		Avatar av = new Avatar(SwingFXUtils.toFXImage(avatarBuff, null));
+		av.setX(arrayX*TileContainer.SIZE_TILE);
+		av.setY(arrayY*TileContainer.SIZE_TILE);
+		return av;
 	}
 
 	public boolean poserBombe(){
 		boolean rtr = false;
 		if(bombSet.size()<numberMaxOfBombe){
 			Bomb bomb = null;
-			if(orientation.equals("EAST")){
+			if(orientation==Orientation.EAST){
 				bomb = new Bomb(new Chronometer(System.currentTimeMillis()/1000),power, arrayX+1, arrayY, timer);
 			}
-			else if(orientation.equals("WEST")){
+			else if(orientation==Orientation.WEST){
 				bomb = new Bomb(new Chronometer(System.currentTimeMillis()/1000),power, arrayX-1, arrayY, timer);
 			}
-			else if(orientation.equals("NORTH")){
+			else if(orientation==Orientation.NORTH){
 				bomb = new Bomb(new Chronometer(System.currentTimeMillis()/1000),power, arrayX, arrayY+1, timer);
 			}
 			else{

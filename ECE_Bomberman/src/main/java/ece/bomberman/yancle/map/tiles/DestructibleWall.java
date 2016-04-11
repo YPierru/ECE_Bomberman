@@ -1,33 +1,16 @@
 package ece.bomberman.yancle.map.tiles;
 
-import javafx.scene.paint.Color;
+import java.io.IOException;
 
-/**
- * Represent a destructible wall
- * @author YPierru
- *
- */
+import javax.imageio.ImageIO;
+
+import javafx.embed.swing.SwingFXUtils;
+import javafx.scene.image.ImageView;
+
 public class DestructibleWall extends Tile {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-
-	public DestructibleWall() {
-		super();
-		initialize();
+	public DestructibleWall() throws IOException{
+		super(SwingFXUtils.toFXImage(ImageIO.read(DestructibleWall.class.getResourceAsStream("destructibleWall.png")),null));
 	}
 	
-	@Override
-	public void initialize() {
-		setFill(Color.GREY);
-		setStroke(Color.WHITE);
-	}
-	
-	@Override
-	public String toString(){
-		return "DestructibleWall X="+getX()+" Y="+getY()+"\n";
-	}
-
 }

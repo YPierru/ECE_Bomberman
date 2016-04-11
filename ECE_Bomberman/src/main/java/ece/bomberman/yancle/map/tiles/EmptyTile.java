@@ -1,37 +1,16 @@
 package ece.bomberman.yancle.map.tiles;
 
-import javafx.scene.paint.Color;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 
+import javax.imageio.ImageIO;
 
-/**
- * Represents an empty tile (which means there's no wall, but possibly a char/bomb)
- * @author YPierru
- *
- */
+import javafx.embed.swing.SwingFXUtils;
+
 public class EmptyTile extends Tile {
-
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-
-	public EmptyTile(){
-		super();
-		initialize();
-	}
-
-	@Override
-	public void initialize() {
-		setFill(Color.WHITE);
-		//setStroke(Color.WHITE);
-		//setStroke(Color.LIGHTGRAY);
-	}
 	
-	@Override
-	public String toString(){
-		return "Empty X="+getX()+" Y="+getY()+"\n";
+	public EmptyTile() throws IOException{
+		super(SwingFXUtils.toFXImage(ImageIO.read(EmptyTile.class.getResourceAsStream("empty.png")),null));
 	}
-	
-	
 	
 }

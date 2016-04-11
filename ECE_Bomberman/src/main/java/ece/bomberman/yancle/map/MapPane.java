@@ -1,24 +1,20 @@
 package ece.bomberman.yancle.map;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Random;
 
-import ece.bomberman.yancle.map.tiles.DestructibleWall;
 import ece.bomberman.yancle.map.tiles.EmptyTile;
 import ece.bomberman.yancle.map.tiles.Tile;
 import ece.bomberman.yancle.map.tiles.TileContainer;
 import ece.bomberman.yancle.map.tiles.UndestructibleWall;
+import ece.bomberman.yancle.player.Bomb;
 import ece.bomberman.yancle.player.IInteractiveShape;
 import ece.bomberman.yancle.player.Orientation;
 import ece.bomberman.yancle.player.Player;
-import javafx.animation.KeyFrame;
-import javafx.animation.KeyValue;
-import javafx.animation.Timeline;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.shape.Arc;
-import javafx.scene.shape.Shape;
-import javafx.util.Duration;
 
 /**
  * Represent the board game.
@@ -42,13 +38,19 @@ public class MapPane extends AnchorPane implements Serializable {
 	public MapPane() {
 		super();
 		tilesContainer = new TileContainer[TILES_NUMBER_X][TILES_NUMBER_Y];
-		initMap();
+		try {
+			initMap();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	/**
 	 * Draw the map
+	 * @throws IOException 
 	 */
-	public void initMap(){
+	public void initMap() throws IOException{
 		//ArrayList<TileContainer> listTC=new ArrayList<>();
 		getChildren().clear();
 		int x=0,y=0;
@@ -134,13 +136,26 @@ public class MapPane extends AnchorPane implements Serializable {
 	
 	public void displayCharactersImage(ArrayList<Player> listPlayers){
 		TileContainer tc;
+		
+		for(int j=0;j<TILES_NUMBER_Y;j++){
+			for(int i=0;i<TILES_NUMBER_X;i++){
+				tilesContainer[i][j].removeAvatar();
+				tilesContainer[i][j].removeBomb();
+			}
+		}
+		
 		for(Player p : listPlayers){
 			tc = tilesContainer[p.getArrayX()][p.getArrayY()];
 			
-			p.setCenterX(tc.getCenterX());
-			p.setCenterY(tc.getCenterY());
+			for(Bomb b : p.getBombSet()){
+				if(!tc.isBombPresent()){
+					tc.addBomb(b.getBombImage());
+				}
+			}
 
-			tc.getChildren().add(p.getAvatar());
+			if(!tc.isAvatarPresent()){
+				tc.addAvatar(p.getAvatar());
+			}
 
 		}
 		refresh();
@@ -201,7 +216,7 @@ public class MapPane extends AnchorPane implements Serializable {
 		tc = tilesContainer[possibleX][possibleY];
 		tile = tc.getTile();
 		
-		if(!tc.isArcPresent()){
+		if(!tc.isAvatarPresent()){
 			if(tile instanceof EmptyTile){
 				return true;
 			}else{
@@ -220,7 +235,7 @@ public class MapPane extends AnchorPane implements Serializable {
 		
 		for(int j=0;j<TILES_NUMBER_Y;j++){
 			for(int i=0;i<TILES_NUMBER_X;i++){
-				if(tilesContainer[i][j].getTile() instanceof EmptyTile && !tilesContainer[i][j].isArcPresent()){
+				if(tilesContainer[i][j].getTile() instanceof EmptyTile && !tilesContainer[i][j].isAvatarPresent()){
 					//System.out.println(tilesContainer[i][j]);
 					xy[0]=i;
 					xy[1]=j;

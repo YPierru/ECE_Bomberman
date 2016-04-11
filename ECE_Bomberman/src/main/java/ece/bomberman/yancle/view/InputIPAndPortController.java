@@ -1,6 +1,5 @@
 package ece.bomberman.yancle.view;
 
-import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -11,7 +10,9 @@ import javax.imageio.ImageIO;
 
 import ece.bomberman.yancle.Client;
 import ece.bomberman.yancle.Main;
-import ece.bomberman.yancle.map.tiles.TileContainer;
+import ece.bomberman.yancle.map.tiles.ImgUtils;
+import ece.bomberman.yancle.player.Avatar;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
@@ -71,13 +72,13 @@ public class InputIPAndPortController implements Initializable{
 			if(file!=null){
 				try {
 					tmp = ImageIO.read(file);
-					avatarBuffer = resizeImage(tmp,tmp.getType());
+					avatarBuffer = ImgUtils.resizeImage(tmp,tmp.getType());
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 		        if(avatarBuffer!=null){
-		            avatar.setImage(new Image("file:"+file.getAbsolutePath()));
+		            avatar.setImage(SwingFXUtils.toFXImage(avatarBuffer, null));
 		            error=false;
 		            join.setDisable(false);
 		        }
@@ -98,13 +99,6 @@ public class InputIPAndPortController implements Initializable{
 		}
 	}
 	
-	private BufferedImage resizeImage(BufferedImage originalImage, int type){
-		BufferedImage resizedImage = new BufferedImage(TileContainer.SIZE_TILE, TileContainer.SIZE_TILE, type);
-		Graphics2D g = resizedImage.createGraphics();
-		g.drawImage(originalImage, 0, 0, TileContainer.SIZE_TILE, TileContainer.SIZE_TILE, null);
-		g.dispose();
-		return resizedImage;
-	}
 	
 	public void setMain(Main m){
 		main=m;
