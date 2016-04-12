@@ -6,25 +6,16 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashSet;
 
 import javax.imageio.ImageIO;
 
-import ece.bomberman.yancle.map.tiles.ImgUtils;
+import ece.bomberman.yancle.Client;
 import ece.bomberman.yancle.map.tiles.TileContainer;
 import ece.bomberman.yancle.utility.Chronometer;
 import javafx.embed.swing.SwingFXUtils;
-import javafx.scene.image.ImageView;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Arc;
-import javafx.scene.shape.ArcType;
-import javafx.scene.shape.Shape;
 
-public class Player implements Serializable, IInteractiveShape{
+public class Player implements Serializable{
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	private int life;
 	private long timer;
@@ -34,63 +25,25 @@ public class Player implements Serializable, IInteractiveShape{
 	private ArrayList<Bomb> bombSet;
 	private int arrayX;
 	private int arrayY;
-	private int centerX;
-	private int centerY;
 	private Orientation orientation = Orientation.EAST;
 	private String name;
 	transient BufferedImage avatarBuff;
 	private boolean isDisplayed;
 	private boolean positionUpdated;
+	transient Client observer;
 
-	public static final double RADIUS = 20.0f;
-	public static final double START_ANGLE = 45.0f;
-	public static final double LENGTH = 270.0f;
-	public static final ArcType ARC_TYPE= ArcType.ROUND;
 	
-	
-	public Player(BufferedImage a, String n){
+	public Player(BufferedImage a, String n,Client c){
 		isDisplayed=false;
 		positionUpdated=true;
 		life = 5;
-		numberMaxOfBombe = 3;
+		numberMaxOfBombe = 30;
 		bombSet = new ArrayList<Bomb>();
-		timer = 4;
+		timer = 1000;
 		power = 2;
 		avatarBuff=a;
 		name=n;
-	}
-	
-	@Override
-	public Shape getShape(){
-		Arc shape = new Arc();
-        shape.setRadiusX(RADIUS);
-        shape.setRadiusY(RADIUS);
-        shape.setLength(LENGTH);
-		//if(color.equals("Blue")){
-	        shape.setFill(Color.BLUE);
-		/*}else if(color.equals("Red")){
-	        shape.setFill(Color.RED);
-		}else if(color.equals("Green")){
-	        shape.setFill(Color.GREEN);		
-		}*/
-        shape.setType(ARC_TYPE);
-        shape.setCenterX(centerX);
-        shape.setCenterY(centerY);
-        
-        if(orientation == Orientation.NORTH){
-			shape.setStartAngle(135);
-		}
-		else if(orientation == Orientation.SOUTH){
-			shape.setStartAngle(-45);
-		}
-		else if(orientation == Orientation.EAST){
-			shape.setStartAngle(45);
-		}
-		else if(orientation == Orientation.WEST){
-			shape.setStartAngle(225);
-		}
-        
-        return shape;
+		observer=c;
 	}
 	
 	private void writeObject(ObjectOutputStream out) throws IOException {
@@ -116,38 +69,21 @@ public class Player implements Serializable, IInteractiveShape{
 		if(bombSet.size()<numberMaxOfBombe){
 			Bomb bomb = null;
 			if(orientation==Orientation.EAST){
-				bomb = new Bomb(new Chronometer(System.currentTimeMillis()/1000),power, arrayX+1, arrayY, timer);
+				bomb = new Bomb(new Chronometer(System.currentTimeMillis()/1000),power, arrayX+1, arrayY, timer,this);
 			}
 			else if(orientation==Orientation.WEST){
-				bomb = new Bomb(new Chronometer(System.currentTimeMillis()/1000),power, arrayX-1, arrayY, timer);
+				bomb = new Bomb(new Chronometer(System.currentTimeMillis()/1000),power, arrayX-1, arrayY, timer,this);
 			}
 			else if(orientation==Orientation.NORTH){
-				bomb = new Bomb(new Chronometer(System.currentTimeMillis()/1000),power, arrayX, arrayY+1, timer);
+				bomb = new Bomb(new Chronometer(System.currentTimeMillis()/1000),power, arrayX, arrayY-1, timer,this);
 			}
 			else{
-				bomb = new Bomb(new Chronometer(System.currentTimeMillis()/1000),power, arrayX, arrayY-1, timer);
+				bomb = new Bomb(new Chronometer(System.currentTimeMillis()/1000),power, arrayX, arrayY+1, timer,this);
 			}
 			bombSet.add(bomb);
-			Bomb temp = bomb;
-			new Thread(new Runnable() {
-				@Override
-				public void run() {
-					// TODO Auto-generated method stub
-					bombExplosion(temp);
-				}
-			}).start();
 			rtr = true;
 		}
 		return rtr;
-	}
-	
-	public void bombExplosion(Bomb bomb){
-		try {
-			Thread.sleep(timer);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 	
 	public void deplacement(Orientation or){
@@ -244,7 +180,6 @@ public class Player implements Serializable, IInteractiveShape{
 	/**
 	 * @return the x
 	 */
-	@Override
 	public int getArrayX() {
 		return arrayX;
 	}
@@ -252,7 +187,6 @@ public class Player implements Serializable, IInteractiveShape{
 	/**
 	 * @param x the x to set
 	 */
-	@Override
 	public void setArrayX(int x) {
 		this.arrayX = x;
 	}
@@ -260,7 +194,6 @@ public class Player implements Serializable, IInteractiveShape{
 	/**
 	 * @return the y
 	 */
-	@Override
 	public int getArrayY() {
 		return arrayY;
 	}
@@ -268,7 +201,6 @@ public class Player implements Serializable, IInteractiveShape{
 	/**
 	 * @param y the y to set
 	 */
-	@Override
 	public void setArrayY(int y) {
 		this.arrayY = y;
 	}
@@ -292,24 +224,6 @@ public class Player implements Serializable, IInteractiveShape{
 	public void setDisplayed(boolean isDisplayed) {
 		this.isDisplayed = isDisplayed;
 	}
-	@Override
-	public int getCenterX() {
-		return centerX;
-	}
-	@Override
-	public void setCenterX(int centerX) {
-		this.centerX = centerX;
-		positionUpdated=false;
-	}
-	@Override
-	public int getCenterY() {
-		return centerY;
-	}
-	@Override
-	public void setCenterY(int centerY) {
-		this.centerY = centerY;
-		positionUpdated=false;
-	}
 
 	public int getSpeed() {
 		return speed;
@@ -326,6 +240,15 @@ public class Player implements Serializable, IInteractiveShape{
 	public void setPositionUpdated(boolean positionUpdated) {
 		this.positionUpdated = positionUpdated;
 	}
+
+	public void refresh() {
+		System.out.println("bombe explosée");
+		bombSet.remove(0);
+		observer.sendPlayer(this);
+	}
 	
+	public void setObserver(Client c){
+		observer=c;
+	}
 	
 }

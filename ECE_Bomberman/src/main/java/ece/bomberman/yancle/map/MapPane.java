@@ -10,11 +10,9 @@ import ece.bomberman.yancle.map.tiles.Tile;
 import ece.bomberman.yancle.map.tiles.TileContainer;
 import ece.bomberman.yancle.map.tiles.UndestructibleWall;
 import ece.bomberman.yancle.player.Bomb;
-import ece.bomberman.yancle.player.IInteractiveShape;
 import ece.bomberman.yancle.player.Orientation;
 import ece.bomberman.yancle.player.Player;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.shape.Arc;
 
 /**
  * Represent the board game.
@@ -97,45 +95,9 @@ public class MapPane extends AnchorPane implements Serializable {
 		}
 	}
 	
-	public void displayInteractiveObject(ArrayList<Player> listPlayers){
-		TileContainer tc;
-		Arc shape;
-		
-		for(int j=0;j<TILES_NUMBER_Y;j++){
-			for(int i=0;i<TILES_NUMBER_X;i++){
-				tilesContainer[i][j].removePlayer();
-			}
-		}
-		for(Player p : listPlayers){
-			//shape = (Arc) p.getShape();
-			tc = tilesContainer[p.getArrayX()][p.getArrayY()];
-
-			//Animation
-			/*Timeline timeline = new Timeline();
-			KeyValue kv = new KeyValue(shape.centerXProperty(), tc.getCenterX());
-			KeyFrame kf = new KeyFrame(Duration.millis(p.getSpeed()), kv);
-			KeyValue kv2 = new KeyValue(shape.centerYProperty(), tc.getCenterY());
-			KeyFrame kf2 = new KeyFrame(Duration.millis(p.getSpeed()), kv2);
-			timeline.getKeyFrames().add(kf);
-			timeline.getKeyFrames().add(kf2);
-			timeline.play();*/
-			
-			p.setCenterX(tc.getCenterX());
-			p.setCenterY(tc.getCenterY());
-			//p.setPositionUpdated(false);
-
-			shape = (Arc) p.getShape();
-
-			if(!tc.isInteractiveShapePresent(p)){
-				tc.addShape(shape);
-			}
-		}
-		refresh();
-		
-	}
-	
 	public void displayCharactersImage(ArrayList<Player> listPlayers){
 		TileContainer tc;
+		TileContainer tcBomb;
 		
 		for(int j=0;j<TILES_NUMBER_Y;j++){
 			for(int i=0;i<TILES_NUMBER_X;i++){
@@ -147,11 +109,15 @@ public class MapPane extends AnchorPane implements Serializable {
 		for(Player p : listPlayers){
 			tc = tilesContainer[p.getArrayX()][p.getArrayY()];
 			
-			for(Bomb b : p.getBombSet()){
-				if(!tc.isBombPresent()){
-					tc.addBomb(b.getBombImage());
+			for(int i=0;i<p.getBombSet().size();i++){
+				Bomb b = p.getBombSet().get(i);
+				tcBomb=tilesContainer[b.getArrayX()][b.getArrayY()];
+				if(!tcBomb.isBombPresent()){
+					System.out.println("bomb#"+i);
+					tcBomb.addBomb(b.getBombImage());
 				}
 			}
+			System.out.println("**************************");
 
 			if(!tc.isAvatarPresent()){
 				tc.addAvatar(p.getAvatar());
@@ -193,7 +159,7 @@ public class MapPane extends AnchorPane implements Serializable {
 		return str;
 	}
 	
-	public boolean isMovePossible(IInteractiveShape p,Orientation orientation){
+	public boolean isMovePossible(Player p,Orientation orientation){
 		
 		int possibleX=p.getArrayX();
 		int possibleY=p.getArrayY();
@@ -216,7 +182,7 @@ public class MapPane extends AnchorPane implements Serializable {
 		tc = tilesContainer[possibleX][possibleY];
 		tile = tc.getTile();
 		
-		if(!tc.isAvatarPresent()){
+		if(!tc.isAvatarPresent() && !tc.isBombPresent()){
 			if(tile instanceof EmptyTile){
 				return true;
 			}else{
@@ -235,7 +201,7 @@ public class MapPane extends AnchorPane implements Serializable {
 		
 		for(int j=0;j<TILES_NUMBER_Y;j++){
 			for(int i=0;i<TILES_NUMBER_X;i++){
-				if(tilesContainer[i][j].getTile() instanceof EmptyTile && !tilesContainer[i][j].isAvatarPresent()){
+				if(tilesContainer[i][j].getTile() instanceof EmptyTile && !tilesContainer[i][j].isAvatarPresent() && !tilesContainer[i][j].isBombPresent()){
 					//System.out.println(tilesContainer[i][j]);
 					xy[0]=i;
 					xy[1]=j;

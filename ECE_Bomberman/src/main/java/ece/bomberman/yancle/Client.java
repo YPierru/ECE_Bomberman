@@ -49,7 +49,7 @@ public class Client implements Runnable {
 		mapPane = new MapPane();
 		main.displayMap(mapPane);
 		
-		player = new Player(avatar, pseudo);
+		player = new Player(avatar, pseudo,this);
 		
 		scene=main.getScene();
 		
@@ -105,6 +105,18 @@ public class Client implements Runnable {
 			e.printStackTrace();
 		}
 	}
+
+	public void sendPlayer(Player p){
+		player=p;
+		try {
+			writer.reset();
+			writer.writeObject(player);
+			writer.flush();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 	
 	@Override
 	public void run() {
@@ -126,6 +138,7 @@ public class Client implements Runnable {
 				for(Player p : mapController.getListPlayers()){
 					if(p.getName().equals(player.getName())){
 						player=p;
+						player.setObserver(this);
 						break;
 					}
 				}

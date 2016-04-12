@@ -15,7 +15,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Shape;
 
-public class Bomb implements Serializable, IInteractiveShape{
+public class Bomb implements Serializable{
 	/**
 	 * 
 	 */
@@ -25,17 +25,15 @@ public class Bomb implements Serializable, IInteractiveShape{
 	private int power;
 	private int arrayX;
 	private int arrayY;
-	private int centerX;
-	private int centerY;
 	transient BufferedImage bombBuff;
+	private Player owner;
 	
 	
 	public Bomb(){
 		super();
 	}
 	
-	public Bomb(Chronometer tim, int pow, int arrayX, int arrayY, long seuil ){
-		super();
+	public Bomb(Chronometer tim, int pow, int arrayX, int arrayY, long seuil,Player p){
 		try {
 			bombBuff=ImageIO.read(Bomb.class.getResourceAsStream("bomb.png"));
 		} catch (IOException e) {
@@ -47,6 +45,19 @@ public class Bomb implements Serializable, IInteractiveShape{
 		setTimer(tim);
 		setPower(pow);
 		setSeuil(seuil);
+		owner=p;
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				try {
+					Thread.sleep(1500);
+					sendNotification();
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}).start();
 	}
 	
 	private void writeObject(ObjectOutputStream out) throws IOException {
@@ -106,7 +117,6 @@ public class Bomb implements Serializable, IInteractiveShape{
 	/**
 	 * @return the x
 	 */
-	@Override
 	public int getArrayX() {
 		return arrayX;
 	}
@@ -114,7 +124,6 @@ public class Bomb implements Serializable, IInteractiveShape{
 	/**
 	 * @param x the x to set
 	 */
-	@Override
 	public void setArrayX(int x) {
 		this.arrayX = x;
 	}
@@ -122,7 +131,6 @@ public class Bomb implements Serializable, IInteractiveShape{
 	/**
 	 * @return the y
 	 */
-	@Override
 	public int getArrayY() {
 		return arrayY;
 	}
@@ -133,46 +141,16 @@ public class Bomb implements Serializable, IInteractiveShape{
 	public void setArrayY(int y) {
 		this.arrayY = y;
 	}
-
-	@Override
-	public Shape getShape() {
-		Circle shape = new Circle();
-		shape.setRadius(5);
-		shape.setCenterX(centerX);
-		shape.setCenterY(centerY);
-		shape.setFill(Color.GREENYELLOW);
-		return shape;
-	}
-
-	@Override
-	public int getCenterX() {
-		// TODO Auto-generated method stub
-		return centerX;
-	}
-
-	@Override
-	public int getCenterY() {
-		// TODO Auto-generated method stub
-		return centerY;
-	}
-
-	@Override
-	public void setCenterX(int X) {
-		// TODO Auto-generated method stub
-		centerX = X;
-	}
-
-	@Override
-	public void setCenterY(int Y) {
-		// TODO Auto-generated method stub
-		centerY = Y;
-	}
 	
 	public BombImage getBombImage(){
 		BombImage bi = new BombImage(SwingFXUtils.toFXImage(bombBuff, null));
 		bi.setX(arrayX*TileContainer.SIZE_TILE);
 		bi.setY(arrayY*TileContainer.SIZE_TILE);
 		return bi;
+	}
+
+	public void sendNotification() {
+		owner.refresh();
 	}
 
 }
