@@ -3,6 +3,7 @@ package ece.bomberman.yancle.map;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+import ece.bomberman.yancle.player.Bomb;
 import ece.bomberman.yancle.player.Player;
 
 public class MapController implements Serializable{
@@ -13,10 +14,12 @@ public class MapController implements Serializable{
 	private static final long serialVersionUID = 1L;
 	private ArrayList<Player> listCharacters;
 	private ArrayList<Integer[]> listDestructibleWall;
+	private ArrayList<Bomb> listBombs;
 	
 	
 	public MapController() {
 		listCharacters = new ArrayList<>();
+		listBombs = new ArrayList<>();
 		generateDestructibleWall();
 	}
 	
@@ -54,6 +57,34 @@ public class MapController implements Serializable{
 			listCharacters.add(p);
 		}
 		
+	}
+	
+	public void removeInvisibleBombs(){
+		for(int i=0;i<listBombs.size();i++){
+			if(listBombs.get(i).hasExploded()){
+				listBombs.remove(i);
+			}
+		}
+	}
+	
+	public void addBomb(Bomb b){
+		boolean flag=false;
+		for(int i=0;i<listBombs.size();i++){
+			if(listBombs.get(i).getIdentifier().equals(b.getIdentifier())){
+				listBombs.remove(i);
+				listBombs.add(i, b);
+				flag=true;
+				break;
+			}
+		}
+				
+		if(!flag){
+			listBombs.add(b);
+		}
+	}
+	
+	public ArrayList<Bomb> getListBombs(){
+		return listBombs;
 	}
 	
 	public ArrayList<Player> getListPlayers(){

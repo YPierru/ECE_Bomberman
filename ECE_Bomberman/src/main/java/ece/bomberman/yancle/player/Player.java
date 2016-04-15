@@ -18,28 +18,24 @@ public class Player implements Serializable{
 
 	private static final long serialVersionUID = 1L;
 	private int life;
-	private long timer;
+	private int timer;//ms
 	private int power;
 	private int numberMaxOfBombe;
 	private int speed=300;//ms
-	private ArrayList<Bomb> bombSet;
-	private int arrayX;
-	private int arrayY;
+	private int cooX;
+	private int cooY;
 	private Orientation orientation = Orientation.EAST;
 	private String name;
 	transient BufferedImage avatarBuff;
 	private boolean isDisplayed;
-	private boolean positionUpdated;
 	transient Client observer;
 
 	
 	public Player(BufferedImage a, String n,Client c){
 		isDisplayed=false;
-		positionUpdated=true;
 		life = 5;
 		numberMaxOfBombe = 30;
-		bombSet = new ArrayList<Bomb>();
-		timer = 1000;
+		timer = 1500;
 		power = 2;
 		avatarBuff=a;
 		name=n;
@@ -59,52 +55,33 @@ public class Player implements Serializable{
 	
 	public Avatar getAvatar(){
 		Avatar av = new Avatar(SwingFXUtils.toFXImage(avatarBuff, null));
-		av.setX(arrayX*TileContainer.SIZE_TILE);
-		av.setY(arrayY*TileContainer.SIZE_TILE);
+		av.setX(cooX*TileContainer.SIZE_TILE);
+		av.setY(cooY*TileContainer.SIZE_TILE);
 		return av;
 	}
 
-	public boolean poserBombe(){
-		boolean rtr = false;
-		if(bombSet.size()<numberMaxOfBombe){
-			Bomb bomb = null;
-			if(orientation==Orientation.EAST){
-				bomb = new Bomb(new Chronometer(System.currentTimeMillis()/1000),power, arrayX+1, arrayY, timer,this);
-			}
-			else if(orientation==Orientation.WEST){
-				bomb = new Bomb(new Chronometer(System.currentTimeMillis()/1000),power, arrayX-1, arrayY, timer,this);
-			}
-			else if(orientation==Orientation.NORTH){
-				bomb = new Bomb(new Chronometer(System.currentTimeMillis()/1000),power, arrayX, arrayY-1, timer,this);
-			}
-			else{
-				bomb = new Bomb(new Chronometer(System.currentTimeMillis()/1000),power, arrayX, arrayY+1, timer,this);
-			}
-			bombSet.add(bomb);
-			rtr = true;
-		}
-		return rtr;
-	}
-	
 	public void deplacement(Orientation or){
+		int x=cooX;
+		int y=cooY;
+		orientation=or;
 		if(or == Orientation.NORTH){
-			setArrayY(arrayY-1);
+			y--;
 		}
 		else if(or == Orientation.SOUTH){
-			setArrayY(arrayY+1);
+			y++;
 		}
 		else if(or == Orientation.EAST){
-			setArrayX(arrayX+1);
+			x++;
 		}
 		else if(or == Orientation.WEST){
-			setArrayX(arrayX-1);
-		}	
-		setOrientation(or);
+			x--;
+		}
+		setXY(x, y);
 	}
 	
 	public void setOrientation(Orientation or){
 		orientation=or;
-		positionUpdated=true;
+		stateChanged();
 	}
 	
 	/**
@@ -124,15 +101,8 @@ public class Player implements Serializable{
 	/**
 	 * @return the timer
 	 */
-	public long getTimer() {
+	public int getTimer() {
 		return timer;
-	}
-
-	/**
-	 * @param timer the timer to set
-	 */
-	public void setTimer(long timer) {
-		this.timer = timer;
 	}
 
 	/**
@@ -143,13 +113,6 @@ public class Player implements Serializable{
 	}
 
 	/**
-	 * @param power the power to set
-	 */
-	public void setPower(int power) {
-		this.power = power;
-	}
-
-	/**
 	 * @return the numberMaxOfBombe
 	 */
 	public int getNumberMaxOfBombe() {
@@ -157,56 +120,23 @@ public class Player implements Serializable{
 	}
 
 	/**
-	 * @param numberMaxOfBombe the numberMaxOfBombe to set
-	 */
-	public void setNumberMaxOfBombe(int numberMaxOfBombe) {
-		this.numberMaxOfBombe = numberMaxOfBombe;
-	}
-
-	/**
-	 * @return the bombSet
-	 */
-	public ArrayList<Bomb> getBombSet() {
-		return bombSet;
-	}
-
-	/**
-	 * @param bombSet the bombSet to set
-	 */
-	public void setBombSet(ArrayList<Bomb> bombSet) {
-		this.bombSet = bombSet;
-	}
-
-	/**
 	 * @return the x
 	 */
-	public int getArrayX() {
-		return arrayX;
+	public int getCooX() {
+		return cooX;
 	}
-
-	/**
-	 * @param x the x to set
-	 */
-	public void setArrayX(int x) {
-		this.arrayX = x;
+	
+	public void setXY(int x,int y){
+		cooX=x;
+		cooY=y;
+		stateChanged();
 	}
 
 	/**
 	 * @return the y
 	 */
-	public int getArrayY() {
-		return arrayY;
-	}
-
-	/**
-	 * @param y the y to set
-	 */
-	public void setArrayY(int y) {
-		this.arrayY = y;
-	}
-	
-	public void setName(String n){
-		name=n;
+	public int getCooY() {
+		return cooY;
 	}
 	
 	public String getName(){
@@ -228,22 +158,8 @@ public class Player implements Serializable{
 	public int getSpeed() {
 		return speed;
 	}
-
-	public void setSpeed(int speed) {
-		this.speed = speed;
-	}
-
-	public boolean isPositionUpdated() {
-		return positionUpdated;
-	}
-
-	public void setPositionUpdated(boolean positionUpdated) {
-		this.positionUpdated = positionUpdated;
-	}
-
-	public void refresh() {
-		System.out.println("bombe explosée");
-		bombSet.remove(0);
+	
+	public void stateChanged() {
 		observer.sendPlayer(this);
 	}
 	

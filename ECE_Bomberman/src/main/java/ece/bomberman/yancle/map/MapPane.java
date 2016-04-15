@@ -12,7 +12,9 @@ import ece.bomberman.yancle.map.tiles.UndestructibleWall;
 import ece.bomberman.yancle.player.Bomb;
 import ece.bomberman.yancle.player.Orientation;
 import ece.bomberman.yancle.player.Player;
+import javafx.animation.PauseTransition;
 import javafx.scene.layout.AnchorPane;
+import javafx.util.Duration;
 
 /**
  * Represent the board game.
@@ -49,10 +51,8 @@ public class MapPane extends AnchorPane implements Serializable {
 	 * @throws IOException 
 	 */
 	public void initMap() throws IOException{
-		//ArrayList<TileContainer> listTC=new ArrayList<>();
 		getChildren().clear();
 		int x=0,y=0;
-		Random rand = new Random();
 		
 		for(int i=0;i<TILES_NUMBER_Y;i++){
 			y=TileContainer.SIZE_TILE*i;
@@ -73,11 +73,7 @@ public class MapPane extends AnchorPane implements Serializable {
 				tilesContainer[i][j]=(TileContainer)getChildren().get(i+(TILES_NUMBER_X*j));
 			}
 		}
-		
-		
-		//TileContainer tc2 = (TileContainer)getChildren().get(24);
-		//tc2.addBomb(new Bomb());
-		
+				
 	}
 
 	public TileContainer[][] getTC(){
@@ -97,27 +93,15 @@ public class MapPane extends AnchorPane implements Serializable {
 	
 	public void displayCharactersImage(ArrayList<Player> listPlayers){
 		TileContainer tc;
-		TileContainer tcBomb;
 		
 		for(int j=0;j<TILES_NUMBER_Y;j++){
 			for(int i=0;i<TILES_NUMBER_X;i++){
 				tilesContainer[i][j].removeAvatar();
-				tilesContainer[i][j].removeBomb();
 			}
 		}
 		
 		for(Player p : listPlayers){
-			tc = tilesContainer[p.getArrayX()][p.getArrayY()];
-			
-			for(int i=0;i<p.getBombSet().size();i++){
-				Bomb b = p.getBombSet().get(i);
-				tcBomb=tilesContainer[b.getArrayX()][b.getArrayY()];
-				if(!tcBomb.isBombPresent()){
-					System.out.println("bomb#"+i);
-					tcBomb.addBomb(b.getBombImage());
-				}
-			}
-			System.out.println("**************************");
+			tc = tilesContainer[p.getCooX()][p.getCooY()];
 
 			if(!tc.isAvatarPresent()){
 				tc.addAvatar(p.getAvatar());
@@ -125,6 +109,31 @@ public class MapPane extends AnchorPane implements Serializable {
 
 		}
 		refresh();
+	}
+	
+	public void displayBombs(ArrayList<Bomb> listBombs){
+
+		for(Bomb b : listBombs){
+			if(!b.isExplosionRunning()){
+				TileContainer tc = tilesContainer[b.getCooX()][b.getCooY()];
+				
+				if(!tc.isBombPresent()){
+					tc.addBomb(b.getBombImage());
+					b.setExplosionRunning(true);
+					new Thread(new Runnable() {
+						@Override
+						public void run() {
+							PauseTransition pause = new PauseTransition(Duration.seconds(1.5));
+					        pause.setOnFinished(event ->{
+					        	tc.removeBomb();
+								b.setHasExploded(true);
+					        } );
+					        pause.play();
+						}
+					}).start();
+				}
+			}
+		}
 	}
 	
 	public void displayDestructibleWalls(ArrayList<Integer[]> listCooDW){
@@ -161,8 +170,8 @@ public class MapPane extends AnchorPane implements Serializable {
 	
 	public boolean isMovePossible(Player p,Orientation orientation){
 		
-		int possibleX=p.getArrayX();
-		int possibleY=p.getArrayY();
+		int possibleX=p.getCooX();
+		int possibleY=p.getCooY();
 		Tile tile;
 		TileContainer tc;
 		
@@ -202,7 +211,6 @@ public class MapPane extends AnchorPane implements Serializable {
 		for(int j=0;j<TILES_NUMBER_Y;j++){
 			for(int i=0;i<TILES_NUMBER_X;i++){
 				if(tilesContainer[i][j].getTile() instanceof EmptyTile && !tilesContainer[i][j].isAvatarPresent() && !tilesContainer[i][j].isBombPresent()){
-					//System.out.println(tilesContainer[i][j]);
 					xy[0]=i;
 					xy[1]=j;
 					coordinates.add(xy);

@@ -5,9 +5,11 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.UUID;
 
 import ece.bomberman.yancle.map.MapController;
 import ece.bomberman.yancle.map.MapPane;
+import ece.bomberman.yancle.player.Bomb;
 import ece.bomberman.yancle.player.InfoPlayerStage;
 import ece.bomberman.yancle.player.Orientation;
 import ece.bomberman.yancle.player.Player;
@@ -30,11 +32,13 @@ public class Client implements Runnable {
 	private Player player;
 	private Scene scene;
 	private InfoPlayerStage frameInfo;
+	private UUID identifier;
 	
 	public Client(String i, int p, Main m, String pseudo, BufferedImage avatar) {
 		ip = i;
 		port = p;
 		main = m;
+		identifier=UUID.randomUUID();
 		try {
 			Socket socket = new Socket(ip, port);
 			writer = new ObjectOutputStream(socket.getOutputStream());
@@ -43,7 +47,7 @@ public class Client implements Runnable {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 		frameInfo = new InfoPlayerStage();
 		
 		mapPane = new MapPane();
@@ -71,11 +75,11 @@ public class Client implements Runnable {
 					movePlayer(Orientation.WEST);
 				    event.consume();
 				}else if(event.getCode() == KeyCode.SPACE){
-					putBomb();
+					plantBomb();
 					event.consume();
 				}
 				
-				sendPlayer();
+				//sendPlayer();
 			}
 		});
 
@@ -89,16 +93,34 @@ public class Client implements Runnable {
 		}
 	}
 	
-	public void putBomb(){
+	public void plantBomb(){
 		if(mapPane.isMovePossible(player, player.getOrientation())){
-			player.poserBombe();
+			int x=player.getCooX();
+			int y=player.getCooY();
+
+			if(player.getOrientation()==Orientation.EAST){
+				x++;
+			}
+			else if(player.getOrientation()==Orientation.WEST){
+				x--;
+			}
+			else if(player.getOrientation()==Orientation.NORTH){
+				y--;
+			}
+			else{
+				y++;
+			}
+			
+			Bomb b = new Bomb(player.getPower(), x, y, player.getTimer(), this, identifier);
+			sendBomb(b);
 		}
 	}
-
-	public void sendPlayer(){
+	
+	
+	public void sendBomb(Bomb b){
 		try {
 			writer.reset();
-			writer.writeObject(player);
+			writer.writeObject(b);
 			writer.flush();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -126,7 +148,6 @@ public class Client implements Runnable {
 			try {
 							
 				o=reader.readObject();
-				//System.out.println(iteration);
 				
 				if(o instanceof MapController){
 					mapController=(MapController)o;
@@ -140,6 +161,12 @@ public class Client implements Runnable {
 						player=p;
 						player.setObserver(this);
 						break;
+					}
+				}
+				
+				for(Bomb b : mapController.getListBombs()){
+					if(b.getIdentifierObserver().equals(identifier)){
+						b.setObserver(this);
 					}
 				}
 				
@@ -157,10 +184,8 @@ public class Client implements Runnable {
 							e.printStackTrace();
 						}
 					int[] xyPlayer = mapPane.getEmptyArrayXY();
-					player.setArrayX(xyPlayer[0]);
-					player.setArrayY(xyPlayer[1]);
 					player.setDisplayed(true);
-					sendPlayer();
+					player.setXY(xyPlayer[0], xyPlayer[1]);
 				 }
 				 
 
@@ -200,8 +225,12 @@ public class Client implements Runnable {
 				@Override
 				public void run() {
 					mapPane.displayDestructibleWalls(mapController.getListDestructibleWall());
-					//mapPane.displayInteractiveObject(mapController.getListPlayers());
 					mapPane.displayCharactersImage(mapController.getListPlayers());
+					mapPane.displayBombs(mapController.getListBombs());
+					int i=0;
+					for(Bomb b : mapController.getListBombs()){
+						System.out.println("bomb#"+i+" hasExploded="+b.hasExploded()+" isExplosionRunning="+b.isExplosionRunning());
+					}
 				}
 			});
 			return null;

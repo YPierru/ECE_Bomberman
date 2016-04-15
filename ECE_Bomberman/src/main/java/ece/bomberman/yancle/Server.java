@@ -6,6 +6,7 @@ import java.net.Socket;
 import java.util.ArrayList;
 
 import ece.bomberman.yancle.map.MapController;
+import ece.bomberman.yancle.player.Bomb;
 import ece.bomberman.yancle.player.Player;
 
 public class Server implements Runnable{
@@ -13,13 +14,13 @@ public class Server implements Runnable{
 	
 	private int port;
 	private ServerSocket socket;
-	private ArrayList<ConnectionHandler> listPlayers;
+	private ArrayList<ConnectionHandler> listConnections;
 	private MapController mapController;
 	 
 	
 	public Server(int p){
 		port=p;
-		listPlayers = new ArrayList<>();
+		listConnections = new ArrayList<>();
 		mapController = new MapController();
 	}
 	
@@ -33,11 +34,12 @@ public class Server implements Runnable{
 			
 			while(true){
 				Socket s=socket.accept();
-				ConnectionHandler player = new ConnectionHandler(s) {
+				ConnectionHandler connection = new ConnectionHandler(s) {
 					
 					@Override
 					public void broadcastMapController() {
-						for(ConnectionHandler ch : listPlayers){
+						mapController.removeInvisibleBombs();
+						for(ConnectionHandler ch : listConnections){
 							ch.sendMapController(mapController);
 						}
 					}
@@ -47,6 +49,11 @@ public class Server implements Runnable{
 						mapController.addCharacter(p);
 					}
 					
+					@Override
+					public void addBomb(Bomb b){
+						mapController.addBomb(b);
+					}
+					
 
 					@Override
 					public void updateListDestructibleWalls(ArrayList<Integer[]> list){
@@ -54,14 +61,14 @@ public class Server implements Runnable{
 					}
 				};
 				
-				listPlayers.add(player);
+				listConnections.add(connection);
 				
 				
-				for(ConnectionHandler ch : listPlayers){
+				for(ConnectionHandler ch : listConnections){
 					ch.sendMapController(mapController);
 				}
 				
-				new Thread(player).start();
+				new Thread(connection).start();
 			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
