@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 import ece.bomberman.yancle.player.Bomb;
 import ece.bomberman.yancle.player.Player;
+import sun.security.krb5.internal.crypto.Des;
 
 public class MapController implements Serializable{
 
@@ -13,20 +14,22 @@ public class MapController implements Serializable{
 	 */
 	private static final long serialVersionUID = 1L;
 	private ArrayList<Player> listCharacters;
-	private ArrayList<Integer[]> listDestructibleWall;
+	private DestructibleWallManager listDestructibleWall;
+	private ExplosionCooManager listCooExplosion;
 	private ArrayList<Bomb> listBombs;
 	
 	
 	public MapController() {
 		listCharacters = new ArrayList<>();
 		listBombs = new ArrayList<>();
+		listCooExplosion=new ExplosionCooManager();
 		generateDestructibleWall();
 	}
 	
 	private void generateDestructibleWall(){
 		ArrayList<Integer> possibleValuesX = new ArrayList<>();
 		ArrayList<Integer> possibleValuesY = new ArrayList<>();
-		listDestructibleWall = new ArrayList<>();
+		listDestructibleWall = new DestructibleWallManager();
 		//int nbDW =new Double(0.1*(MapPane.TILES_NUMBER_X*MapPane.TILES_NUMBER_Y)).intValue();
 		int[] xyDW = new int[2];
 			
@@ -67,6 +70,10 @@ public class MapController implements Serializable{
 		}
 	}
 	
+	public void removeCooExplosion(){
+		listCooExplosion=null;
+	}
+	
 	public void addBomb(Bomb b){
 		boolean flag=false;
 		for(int i=0;i<listBombs.size();i++){
@@ -91,12 +98,20 @@ public class MapController implements Serializable{
 		return listCharacters;
 	}
 	
-	public ArrayList<Integer[]> getListDestructibleWall(){
+	public DestructibleWallManager getListDestructibleWall(){
 		return listDestructibleWall;
 	}
 	
-	public void setListDestructibleWall(ArrayList<Integer[]> list){
+	public void setListDestructibleWall(DestructibleWallManager list){
 		listDestructibleWall = list;
+	}
+	
+	public ExplosionCooManager getListCooExplosion(){
+		return listCooExplosion;
+	}
+	
+	public void setListCooExplosion(ExplosionCooManager ecm){
+		listCooExplosion=ecm;
 	}
 
 }

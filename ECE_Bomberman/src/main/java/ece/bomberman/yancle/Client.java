@@ -7,6 +7,8 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.UUID;
 
+import ece.bomberman.yancle.map.DestructibleWallManager;
+import ece.bomberman.yancle.map.ExplosionCooManager;
 import ece.bomberman.yancle.map.MapController;
 import ece.bomberman.yancle.map.MapPane;
 import ece.bomberman.yancle.player.Bomb;
@@ -19,6 +21,7 @@ import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import sun.security.krb5.internal.crypto.Des;
 
 public class Client implements Runnable {
 
@@ -33,6 +36,7 @@ public class Client implements Runnable {
 	private Scene scene;
 	private InfoPlayerStage frameInfo;
 	private UUID identifier;
+	private int iteration=1;
 	
 	public Client(String i, int p, Main m, String pseudo, BufferedImage avatar) {
 		ip = i;
@@ -50,7 +54,7 @@ public class Client implements Runnable {
 
 		frameInfo = new InfoPlayerStage();
 		
-		mapPane = new MapPane();
+		mapPane = new MapPane(this);
 		main.displayMap(mapPane);
 		
 		player = new Player(avatar, pseudo,this);
@@ -140,14 +144,36 @@ public class Client implements Runnable {
 		}
 	}
 	
+	public void sendListCooExplosion(ExplosionCooManager ecm){
+		try {
+			writer.reset();
+			writer.writeObject(ecm);
+			writer.flush();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public void sendListDestructibleWall(DestructibleWallManager dwm){
+		try {
+			writer.reset();
+			writer.writeObject(dwm);
+			writer.flush();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
 	@Override
 	public void run() {
 		Object o;
-		//int iteration = 1;
 		while (true) {
-			try {
-							
+			try {	
+				//System.out.println("attente read");
 				o=reader.readObject();
+				//System.out.println(iteration+" "+player.getName());	
 				
 				if(o instanceof MapController){
 					mapController=(MapController)o;
@@ -189,7 +215,7 @@ public class Client implements Runnable {
 				 }
 				 
 
-				 //iteration ++;
+				 iteration ++;
 			} catch (ClassNotFoundException | IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -225,11 +251,14 @@ public class Client implements Runnable {
 				@Override
 				public void run() {
 					mapPane.displayDestructibleWalls(mapController.getListDestructibleWall());
-					mapPane.displayCharactersImage(mapController.getListPlayers());
+					if(iteration==1){
+						mapPane.displayCharactersImage(mapController.getListPlayers(),true);
+					}else{
+						mapPane.displayCharactersImage(mapController.getListPlayers(),false);
+					}
 					mapPane.displayBombs(mapController.getListBombs());
-					int i=0;
-					for(Bomb b : mapController.getListBombs()){
-						System.out.println("bomb#"+i+" hasExploded="+b.hasExploded()+" isExplosionRunning="+b.isExplosionRunning());
+					if(mapController.getListCooExplosion().size()>0){
+						mapPane.displayExplosion(mapController.getListCooExplosion(),mapController.getListDestructibleWall(),mapController.getListPlayers());
 					}
 				}
 			});

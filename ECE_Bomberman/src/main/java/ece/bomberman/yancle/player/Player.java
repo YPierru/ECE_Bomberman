@@ -24,11 +24,14 @@ public class Player implements Serializable{
 	private int speed=300;//ms
 	private int cooX;
 	private int cooY;
+	private int previousCooX;
+	private int previousCooY;
 	private Orientation orientation = Orientation.EAST;
 	private String name;
 	transient BufferedImage avatarBuff;
 	private boolean isDisplayed;
 	transient Client observer;
+	private boolean hasMoved=false;
 
 	
 	public Player(BufferedImage a, String n,Client c){
@@ -81,7 +84,7 @@ public class Player implements Serializable{
 	
 	public void setOrientation(Orientation or){
 		orientation=or;
-		stateChanged();
+		setHasMoved(true);
 	}
 	
 	/**
@@ -127,9 +130,11 @@ public class Player implements Serializable{
 	}
 	
 	public void setXY(int x,int y){
+		previousCooX=cooX;
+		previousCooY=cooY;
 		cooX=x;
 		cooY=y;
-		stateChanged();
+		setHasMoved(true);
 	}
 
 	/**
@@ -137,6 +142,15 @@ public class Player implements Serializable{
 	 */
 	public int getCooY() {
 		return cooY;
+	}
+	
+	
+	public int getPreviousCooX() {
+		return previousCooX;
+	}
+
+	public int getPreviousCooY() {
+		return previousCooY;
 	}
 	
 	public String getName(){
@@ -159,12 +173,28 @@ public class Player implements Serializable{
 		return speed;
 	}
 	
-	public void stateChanged() {
-		observer.sendPlayer(this);
-	}
 	
 	public void setObserver(Client c){
 		observer=c;
 	}
 	
+	public void setHasMoved(boolean h){
+		hasMoved=h;
+		stateChanged();
+	}
+	
+	public boolean hasMoved(){
+		return hasMoved;
+	}
+	
+	
+	
+	
+	
+
+	public void stateChanged() {
+		if(observer!=null){
+			observer.sendPlayer(this);
+		}
+	}
 }

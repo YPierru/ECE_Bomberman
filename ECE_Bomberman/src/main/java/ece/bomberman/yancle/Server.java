@@ -5,6 +5,8 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 
+import ece.bomberman.yancle.map.DestructibleWallManager;
+import ece.bomberman.yancle.map.ExplosionCooManager;
 import ece.bomberman.yancle.map.MapController;
 import ece.bomberman.yancle.player.Bomb;
 import ece.bomberman.yancle.player.Player;
@@ -56,8 +58,13 @@ public class Server implements Runnable{
 					
 
 					@Override
-					public void updateListDestructibleWalls(ArrayList<Integer[]> list){
+					public void updateListDestructibleWalls(DestructibleWallManager list){
 						mapController.setListDestructibleWall(list);
+					}
+					
+					@Override
+					public void setExplosionCooManager(ExplosionCooManager list){
+						mapController.setListCooExplosion(list);
 					}
 				};
 				

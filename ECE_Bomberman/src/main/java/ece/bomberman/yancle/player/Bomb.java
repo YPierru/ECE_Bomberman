@@ -10,6 +10,7 @@ import java.util.UUID;
 import javax.imageio.ImageIO;
 
 import ece.bomberman.yancle.Client;
+import ece.bomberman.yancle.map.ExplosionCooManager;
 import ece.bomberman.yancle.map.tiles.TileContainer;
 import ece.bomberman.yancle.utility.Chronometer;
 import javafx.embed.swing.SwingFXUtils;
@@ -28,8 +29,9 @@ public class Bomb implements Serializable{
 	private int cooY;
 	transient BufferedImage bombBuff;
 	private boolean hasExploded=false;
-	private boolean explosionRunning=false;
+	private boolean countDownStarted=false;
 	transient Client observer;
+	private ExplosionCooManager listCooExplosion;
 		
 	public Bomb(int pow, int x, int y, int dur ,Client o,UUID idO){
 		identifier = UUID.randomUUID();
@@ -47,17 +49,18 @@ public class Bomb implements Serializable{
 		duration=dur;
 	}
 	
-	public void setExplosionRunning(boolean er){
-		explosionRunning=er;
+	public void setCountdownStarted(boolean er){
+		countDownStarted=er;
 		sendNotification();
 	}
 	
-	public boolean isExplosionRunning(){
-		return explosionRunning;
+	public boolean isCountdownStarted(){
+		return countDownStarted;
 	}
 	
 	public void setHasExploded(boolean he){
 		hasExploded=he;
+		sendListCooExplosionToClient();
 		sendNotification();
 	}
 	
@@ -130,6 +133,10 @@ public class Bomb implements Serializable{
 		observer=c;
 	}
 	
+	public void setListCooExplosion(ExplosionCooManager ecm){
+		listCooExplosion=ecm;
+	}
+	
 	public BombImage getBombImage(){
 		BombImage bi = new BombImage(SwingFXUtils.toFXImage(bombBuff, null));
 		bi.setX(cooX*TileContainer.SIZE_TILE);
@@ -137,6 +144,12 @@ public class Bomb implements Serializable{
 		return bi;
 	}
 
+	public void sendListCooExplosionToClient(){
+		if(observer!=null){
+			observer.sendListCooExplosion(listCooExplosion);
+		}
+	}
+	
 	public void sendNotification() {
 		if(observer!=null){
 			observer.sendBomb(this);

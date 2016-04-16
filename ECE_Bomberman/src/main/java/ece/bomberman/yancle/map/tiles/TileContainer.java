@@ -22,8 +22,8 @@ public class TileContainer extends Pane implements Serializable{
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	//private Tile tile;
 	private Tile tile;
+	private Avatar savedAvatar;
 	private int x;
 	private int y;
 	
@@ -61,6 +61,15 @@ public class TileContainer extends Pane implements Serializable{
 		return false;
 	}
 	
+	public boolean isUndestructibleWallPresent(){
+		for(Node n : getChildren()){
+			if(n instanceof UndestructibleWall){
+				return true;
+			}
+		}
+		return false;
+	}
+	
 	public void replaceDestructibleWallWithEmpty(){
 		for(int i = 0;i<getChildren().size();i++){
 			if(getChildren().get(i) instanceof DestructibleWall){
@@ -83,6 +92,50 @@ public class TileContainer extends Pane implements Serializable{
 				getChildren().remove(i);
 				try {
 					tile=new DestructibleWall();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				getChildren().add(tile);
+				moveTile();
+			}
+		}
+	}
+	
+	public void replaceExplosionWithEmpty(){
+		for(int i = 0;i<getChildren().size();i++){
+			if(getChildren().get(i) instanceof ExplosionTile){
+				getChildren().remove(i);
+				try {
+					tile=new EmptyTile();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				getChildren().add(tile);
+				moveTile();
+			}
+		}
+		
+		
+		
+		for(int i=0;i<getChildren().size();i++){
+			if(getChildren().get(i) instanceof Avatar){
+				savedAvatar=(Avatar)getChildren().get(i);
+				getChildren().remove(i);
+				addAvatar(savedAvatar);
+				break;
+			}
+		}
+	}
+	
+	public void replaceWithExplosion(){
+		
+		for(int i = 0;i<getChildren().size();i++){
+			if(getChildren().get(i) instanceof EmptyTile || getChildren().get(i) instanceof DestructibleWall){
+				getChildren().remove(i);
+				try {
+					tile=new ExplosionTile();
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
