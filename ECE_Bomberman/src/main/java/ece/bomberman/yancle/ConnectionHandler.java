@@ -38,13 +38,22 @@ public abstract class ConnectionHandler implements Runnable {
 			e.printStackTrace();
 		}
 	}
+		
+	public void close(){
+		try {
+			socket.close();
+			reader.close();
+			writer.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 	
 	@Override
 	public void run() {
 		Object o;
 		while(true){
-	
-			
 			try {
 				o=reader.readObject();
 			

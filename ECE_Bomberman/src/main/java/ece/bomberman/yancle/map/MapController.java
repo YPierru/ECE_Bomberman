@@ -3,6 +3,7 @@ package ece.bomberman.yancle.map;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+import ece.bomberman.yancle.map.tiles.TileContainer;
 import ece.bomberman.yancle.player.Bomb;
 import ece.bomberman.yancle.player.Player;
 import sun.security.krb5.internal.crypto.Des;
@@ -27,21 +28,86 @@ public class MapController implements Serializable{
 	}
 	
 	private void generateDestructibleWall(){
-		ArrayList<Integer> possibleValuesX = new ArrayList<>();
-		ArrayList<Integer> possibleValuesY = new ArrayList<>();
 		listDestructibleWall = new DestructibleWallManager();
-		//int nbDW =new Double(0.1*(MapPane.TILES_NUMBER_X*MapPane.TILES_NUMBER_Y)).intValue();
-		int[] xyDW = new int[2];
-			
-		listDestructibleWall.add(new Integer[]{1,1});
-		listDestructibleWall.add(new Integer[]{2,1});
-		listDestructibleWall.add(new Integer[]{3,1});
-		listDestructibleWall.add(new Integer[]{1,3});
-		listDestructibleWall.add(new Integer[]{2,3});
-		listDestructibleWall.add(new Integer[]{3,3});
-		listDestructibleWall.add(new Integer[]{1,5});
-		listDestructibleWall.add(new Integer[]{2,5});
-		listDestructibleWall.add(new Integer[]{3,5});
+		
+		for(int i=1;i<= MapPane.TILES_NUMBER_X-2;i++){
+			for(int j=1;j<=MapPane.TILES_NUMBER_Y-2;j++){
+				if(i%2!=0 || j%2!=0){
+					listDestructibleWall.add(new Integer[]{i,j});
+				}
+			}
+		}
+		
+		Integer[] coo;
+		for(int i=0;i<listDestructibleWall.size();i++){
+			coo=listDestructibleWall.get(i);
+			if(coo[1]==1){
+				listDestructibleWall.remove(i);
+			}
+		}
+		
+		for(int i=0;i<listDestructibleWall.size();i++){
+			coo=listDestructibleWall.get(i);
+			if(coo[1]==4){
+				listDestructibleWall.remove(i);
+			}
+		}
+
+		for(int i=0;i<listDestructibleWall.size();i++){
+			coo=listDestructibleWall.get(i);
+			if(coo[1]==10){
+				listDestructibleWall.remove(i);
+			}
+		}
+		
+		for(int i=0;i<listDestructibleWall.size();i++){
+			coo=listDestructibleWall.get(i);
+			if(coo[1]==8){
+				listDestructibleWall.remove(i);
+			}
+		}
+
+		for(int i=0;i<listDestructibleWall.size();i++){
+			coo=listDestructibleWall.get(i);
+			if(coo[0]==7){
+				listDestructibleWall.remove(i);
+			}
+		}
+
+		for(int i=0;i<listDestructibleWall.size();i++){
+			coo=listDestructibleWall.get(i);
+			if(coo[0]==9){
+				listDestructibleWall.remove(i);
+			}
+		}
+
+		for(int i=0;i<listDestructibleWall.size();i++){
+			coo=listDestructibleWall.get(i);
+			if(coo[1]==9){
+				listDestructibleWall.remove(i);
+			}
+		}
+		
+		for(int i=0;i<listDestructibleWall.size();i++){
+			coo=listDestructibleWall.get(i);
+			if(coo[0]==1){
+				listDestructibleWall.remove(i);
+			}
+		}
+		
+		for(int i=0;i<listDestructibleWall.size();i++){
+			coo=listDestructibleWall.get(i);
+			if(coo[1]==11){
+				listDestructibleWall.remove(i);
+			}
+		}
+		
+		for(int i=0;i<listDestructibleWall.size();i++){
+			coo=listDestructibleWall.get(i);
+			if(coo[0]==17){
+				listDestructibleWall.remove(i);
+			}
+		}
 		
 	}
 	

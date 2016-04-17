@@ -13,17 +13,17 @@ import ece.bomberman.yancle.Client;
 import ece.bomberman.yancle.map.tiles.TileContainer;
 import ece.bomberman.yancle.utility.Chronometer;
 import javafx.embed.swing.SwingFXUtils;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 
 public class Player implements Serializable{
 
 	private static final long serialVersionUID = 1L;
 	private int life;
-	private int timer;//ms
-	private int power;
-	private int numberMaxOfBombe;
 	private int speed=300;//ms
 	private int cooX;
 	private int cooY;
+	private int numberBombsPlanted;
 	private int previousCooX;
 	private int previousCooY;
 	private Orientation orientation = Orientation.EAST;
@@ -32,14 +32,15 @@ public class Player implements Serializable{
 	private boolean isDisplayed;
 	transient Client observer;
 	private boolean hasMoved=false;
+	//private boolean dead = false;
 
+	public static final int STARTING_LIFE = 5;
+	public static final int NUMBER_BOMB_MAX=10;
 	
 	public Player(BufferedImage a, String n,Client c){
 		isDisplayed=false;
-		life = 5;
-		numberMaxOfBombe = 30;
-		timer = 1500;
-		power = 2;
+		life = STARTING_LIFE;
+		numberBombsPlanted=0;
 		avatarBuff=a;
 		name=n;
 		observer=c;
@@ -97,29 +98,9 @@ public class Player implements Serializable{
 	/**
 	 * @param life the life to set
 	 */
-	public void setLife(int life) {
-		this.life = life;
-	}
-
-	/**
-	 * @return the timer
-	 */
-	public int getTimer() {
-		return timer;
-	}
-
-	/**
-	 * @return the power
-	 */
-	public int getPower() {
-		return power;
-	}
-
-	/**
-	 * @return the numberMaxOfBombe
-	 */
-	public int getNumberMaxOfBombe() {
-		return numberMaxOfBombe;
+	public void setLife(int l) {
+		life = l;
+		stateChanged();
 	}
 
 	/**
@@ -173,6 +154,18 @@ public class Player implements Serializable{
 		return speed;
 	}
 	
+	public void incrementNumberBombPlanted(){
+		numberBombsPlanted++;
+		stateChanged();
+	}
+	
+	public int getNumberBombsPlanted(){
+		return numberBombsPlanted;
+	}
+	
+	public boolean canPlantBomb(){
+		return (numberBombsPlanted<NUMBER_BOMB_MAX);
+	}
 	
 	public void setObserver(Client c){
 		observer=c;
@@ -187,8 +180,13 @@ public class Player implements Serializable{
 		return hasMoved;
 	}
 	
+	public BufferedImage getBuff(){
+		return avatarBuff;
+	}
 	
-	
+	/*public boolean isDead(){
+		return dead;
+	}*/
 	
 	
 

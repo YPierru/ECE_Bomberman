@@ -99,8 +99,7 @@ public class MapPane extends AnchorPane implements Serializable {
 		}
 	}
 	
-	public void displayExplosion(ExplosionCooManager listCooExplosion,DestructibleWallManager listDW, ArrayList<Player> listPlayers){
-		System.out.println(listCooExplosion.size());
+	public DestructibleWallManager displayExplosion(ExplosionCooManager listCooExplosion,DestructibleWallManager listDW, ArrayList<Player> listPlayers){
 		int xDW,yDW;
 		for(int i=0;i<listCooExplosion.size();i++){
 			int x=listCooExplosion.get(i)[0];
@@ -112,7 +111,7 @@ public class MapPane extends AnchorPane implements Serializable {
 			Thread t = new Thread(new Runnable() {
 				@Override
 				public void run() {
-					PauseTransition pause = new PauseTransition(Duration.seconds(0.5));
+					PauseTransition pause = new PauseTransition(Duration.millis(500));
 			        pause.setOnFinished(event ->{
 			        	tilesContainer[x][y].replaceExplosionWithEmpty();
 			        } );
@@ -132,17 +131,13 @@ public class MapPane extends AnchorPane implements Serializable {
 			
 			for(Player p : listPlayers){
 				if(p.getCooX()==x && p.getCooY()==y){
-					System.out.println(p.getName()+" touché !");
+					p.setLife(p.getLife()-Bomb.POWER);
 				}
 			}
 			
 		}
-		listCooExplosion.clear();
-		client.sendListCooExplosion(listCooExplosion);
-		client.sendListDestructibleWall(listDW);
-		
-		
-		
+		return listDW;
+				
 	}
 	
 	public void displayCharactersImage(ArrayList<Player> listPlayers,boolean printAll){
@@ -150,20 +145,25 @@ public class MapPane extends AnchorPane implements Serializable {
 		
 		for(Player p : listPlayers){
 			tc = tilesContainer[p.getCooX()][p.getCooY()];
-			if(printAll){
-				if(!tc.isAvatarPresent()){
-					tc.addAvatar(p.getAvatar());
-				}
-			}else{
-				if(p.hasMoved()){
-					
-					tilesContainer[p.getPreviousCooX()][p.getPreviousCooY()].removeAvatar();
+			
+			/*if(p.isDead()){
+				tc.removeAvatar();
+			}else{*/
+				if(printAll){
 					if(!tc.isAvatarPresent()){
 						tc.addAvatar(p.getAvatar());
-					}		
-					p.setHasMoved(false);
+					}
+				}else{
+					if(p.hasMoved()){
+						
+						tilesContainer[p.getPreviousCooX()][p.getPreviousCooY()].removeAvatar();
+						if(!tc.isAvatarPresent()){
+							tc.addAvatar(p.getAvatar());
+						}		
+						p.setHasMoved(false);
+					}
 				}
-			}
+			//}
 
 		}
 	}
@@ -181,7 +181,7 @@ public class MapPane extends AnchorPane implements Serializable {
 					new Thread(new Runnable() {
 						@Override
 						public void run() {
-							PauseTransition pause = new PauseTransition(Duration.seconds(1.5));
+							PauseTransition pause = new PauseTransition(Duration.millis(Bomb.DURATION));
 					        pause.setOnFinished(event ->{
 					        	tc.removeBomb();
 					        	b.setListCooExplosion(listCooExplosion);

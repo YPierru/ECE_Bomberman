@@ -19,6 +19,8 @@ import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import sun.security.krb5.internal.crypto.Des;
@@ -37,6 +39,7 @@ public class Client implements Runnable {
 	private InfoPlayerStage frameInfo;
 	private UUID identifier;
 	private int iteration=1;
+	private Socket socket;
 	
 	public Client(String i, int p, Main m, String pseudo, BufferedImage avatar) {
 		ip = i;
@@ -44,7 +47,7 @@ public class Client implements Runnable {
 		main = m;
 		identifier=UUID.randomUUID();
 		try {
-			Socket socket = new Socket(ip, port);
+			socket = new Socket(ip, port);
 			writer = new ObjectOutputStream(socket.getOutputStream());
 			reader = new ObjectInputStream(socket.getInputStream());
 		} catch (IOException e) {
@@ -79,11 +82,18 @@ public class Client implements Runnable {
 					movePlayer(Orientation.WEST);
 				    event.consume();
 				}else if(event.getCode() == KeyCode.SPACE){
-					plantBomb();
+					if(player.canPlantBomb()){
+						player.incrementNumberBombPlanted();
+						plantBomb();
+					}else{
+						Alert alert = new Alert(AlertType.ERROR);
+						alert.setTitle("Maximum of bombs reached");
+						alert.setHeaderText(null);
+						alert.setContentText("You already have planted all the bombs you had ("+Player.NUMBER_BOMB_MAX+")");
+						alert.showAndWait();
+					}
 					event.consume();
 				}
-				
-				//sendPlayer();
 			}
 		});
 
@@ -114,9 +124,8 @@ public class Client implements Runnable {
 			else{
 				y++;
 			}
-			
-			Bomb b = new Bomb(player.getPower(), x, y, player.getTimer(), this, identifier);
-			sendBomb(b);
+						
+			sendBomb(new Bomb(x, y, this, identifier));
 		}
 	}
 	
@@ -131,7 +140,7 @@ public class Client implements Runnable {
 			e.printStackTrace();
 		}
 	}
-
+	
 	public void sendPlayer(Player p){
 		player=p;
 		try {
@@ -171,9 +180,7 @@ public class Client implements Runnable {
 		Object o;
 		while (true) {
 			try {	
-				//System.out.println("attente read");
 				o=reader.readObject();
-				//System.out.println(iteration+" "+player.getName());	
 				
 				if(o instanceof MapController){
 					mapController=(MapController)o;
@@ -190,13 +197,15 @@ public class Client implements Runnable {
 					}
 				}
 				
+				
+				
 				for(Bomb b : mapController.getListBombs()){
 					if(b.getIdentifierObserver().equals(identifier)){
 						b.setObserver(this);
 					}
 				}
 				
-				 //new Thread(new UpdateFrameInfo()).start();
+				 new Thread(new UpdateFrameInfo()).start();
 				 
 				 new Thread(new UpdateMapPane()).start();
 				 
@@ -258,7 +267,9 @@ public class Client implements Runnable {
 					}
 					mapPane.displayBombs(mapController.getListBombs());
 					if(mapController.getListCooExplosion().size()>0){
-						mapPane.displayExplosion(mapController.getListCooExplosion(),mapController.getListDestructibleWall(),mapController.getListPlayers());
+						DestructibleWallManager dwm=mapPane.displayExplosion(mapController.getListCooExplosion(),mapController.getListDestructibleWall(),mapController.getListPlayers());
+						sendListCooExplosion(new ExplosionCooManager());
+						sendListDestructibleWall(dwm);
 					}
 				}
 			});

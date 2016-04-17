@@ -25,8 +25,6 @@ public class Server implements Runnable{
 		listConnections = new ArrayList<>();
 		mapController = new MapController();
 	}
-	
-
 
 	@Override
 	public void run() {

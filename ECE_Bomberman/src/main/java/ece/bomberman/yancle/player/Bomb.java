@@ -23,8 +23,6 @@ public class Bomb implements Serializable{
 	private UUID identifier;
 	private UUID identifierObserver;
 	private static final long serialVersionUID = 1L;
-	private int duration;//timer before explosion in ms
-	private int power;
 	private int cooX;
 	private int cooY;
 	transient BufferedImage bombBuff;
@@ -32,8 +30,12 @@ public class Bomb implements Serializable{
 	private boolean countDownStarted=false;
 	transient Client observer;
 	private ExplosionCooManager listCooExplosion;
+	
+	
+	public static final int DURATION=500;//ms
+	public static final int POWER=2;//unit of life
 		
-	public Bomb(int pow, int x, int y, int dur ,Client o,UUID idO){
+	public Bomb(int x, int y,Client o,UUID idO){
 		identifier = UUID.randomUUID();
 		try {
 			bombBuff=ImageIO.read(Bomb.class.getResourceAsStream("bomb.png"));
@@ -45,8 +47,6 @@ public class Bomb implements Serializable{
 		identifierObserver=idO;
 		cooX=x;
 		cooY=y;
-		power=pow;
-		duration=dur;
 	}
 	
 	public void setCountdownStarted(boolean er){
@@ -86,34 +86,6 @@ public class Bomb implements Serializable{
         in.defaultReadObject();
         bombBuff = ImageIO.read(in);
     }
-
-	/**
-	 * @return the seuil
-	 */
-	public int getDuration() {
-		return duration;
-	}
-
-	/**
-	 * @param seuil the seuil to set
-	 */
-	public void setDuration(int d) {
-		this.duration = d;
-	}
-
-	/**
-	 * @return the power
-	 */
-	public int getPower() {
-		return power;
-	}
-
-	/**
-	 * @param power the power to set
-	 */
-	public void setPower(int power) {
-		this.power = power;
-	}
 
 	/**
 	 * @return the x

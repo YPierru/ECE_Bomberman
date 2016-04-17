@@ -10,7 +10,7 @@ import javafx.scene.image.ImageView;
 public class UndestructibleWall extends Tile {
 
 	public UndestructibleWall() throws IOException{
-		super(SwingFXUtils.toFXImage(ImageIO.read(UndestructibleWall.class.getResourceAsStream("wall.png")),null));
+		super(SwingFXUtils.toFXImage(ImageIO.read(UndestructibleWall.class.getResourceAsStream("wall.jpg")),null));
 	}
 	
 }

@@ -8,9 +8,4 @@ public class Avatar extends ImageView {
 	public Avatar(Image i){
 		super(i);
 	}
-
-	@Override
-	public String toString(){
-		return "Avatar";
-	}
 }

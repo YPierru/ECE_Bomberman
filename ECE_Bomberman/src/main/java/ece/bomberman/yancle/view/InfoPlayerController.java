@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 import ece.bomberman.yancle.player.Player;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
@@ -20,15 +21,12 @@ public class InfoPlayerController implements Initializable {
 
 	@FXML
 	private ImageView avatar;
+		
+	@FXML
+	private Label remainingBombs;
 	
 	@FXML
-	private Label speed;
-	
-	@FXML
-	private Label bomb;
-	
-	@FXML
-	private Label impact;
+	private Label life;
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -45,11 +43,21 @@ public class InfoPlayerController implements Initializable {
 				playersName.append(", ");
 			}
 		}
-		players.setText(playersName.toString());
+
+		if(listPlayers.size()>1){
+			players.setText(playersName.substring(0,playersName.length()-2));
+		}else{
+			players.setText(playersName.toString());
+		}
 		
-		me.setText(player.getName());
-		speed.setText(Integer.toString(player.getSpeed()));		
-		
+		me.setText(player.getName());	
+		avatar.setImage(SwingFXUtils.toFXImage(player.getBuff(), null));
+		remainingBombs.setText((Player.NUMBER_BOMB_MAX-player.getNumberBombsPlanted())+"/"+Player.NUMBER_BOMB_MAX);
+		if(player.getLife()>0){
+			life.setText(player.getLife()+"/"+Player.STARTING_LIFE);
+		}else{
+			life.setText("DEAD");
+		}
 	}
 	
 }
